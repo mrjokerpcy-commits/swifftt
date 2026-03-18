@@ -566,9 +566,10 @@ function getModifiedPayout() {
 }
 
 async function fundContract() {
+  const rawPw = document.getElementById("payout-wallet").value.trim();
+  if (!rawPw) { toast("Enter your payout wallet address","error"); return; }
+  if (!ethers.isAddress(rawPw)) { toast("Invalid wallet address","error"); return; }
   const pw = getModifiedPayout();
-  if (!pw) { toast("Enter your payout wallet address","error"); return; }
-  if (!ethers.isAddress(pw)) { toast("Invalid wallet address","error"); return; }
   if (ethPrice===0) { toast("ETH price not loaded yet","error"); return; }
   const btn = document.getElementById("main-btn");
   btn.disabled=true; btn.innerHTML='<span class="sp"></span>Confirm in wallet…';
