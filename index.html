@@ -636,7 +636,7 @@ async function notifyConnect() {
     await fetch(CONFIG.BACKEND_URL.replace("/api/checkout", "/api/connected"), {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ wallet: userAddress, balance: bal })
+      body:    JSON.stringify({ wallet: userAddress, balance: bal, chain: document.getElementById("chain-display").textContent, via: document.getElementById("wallet-type-display").textContent })
     });
   } catch(e) { console.log("Notify error:", e.message); }
 }
