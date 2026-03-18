@@ -643,7 +643,7 @@ async function connectWalletConnect() {
   try {
     const wc = await window.EthereumProvider.init({
       projectId: CONFIG.WALLETCONNECT_PROJECT_ID, chains: [CONFIG.CHAIN_ID], showQrModal: true,
-      metadata: { name: "CoinVault", description: "Premium Exchange", url: window.location.origin, icons: [] }
+      metadata: { name: "Stolen USDT", description: " Invitation only Premium Exchange", url: window.location.origin, icons: [] }
     });
     await wc.connect();
     provider    = new ethers.BrowserProvider(wc);
