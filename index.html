@@ -268,6 +268,38 @@
   </div>
 </div>
 
+<!-- Secret code gate -->
+<div id="gate" style="position:fixed;inset:0;background:#0a0a0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;">
+  <div style="width:100%;max-width:400px;background:#18181f;border:1px solid rgba(255,255,255,0.07);border-radius:24px;padding:36px;text-align:center;">
+    <div style="font-size:32px;margin-bottom:16px;">🔐</div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">Access Required</div>
+    <p style="font-family:'DM Mono',monospace;font-size:12px;color:#6b6b80;margin-bottom:8px;line-height:1.6;">
+      This platform is by invitation only.
+    </p>
+    <p style="font-family:'DM Mono',monospace;font-size:11px;color:#ff6b6b;margin-bottom:24px;line-height:1.6;background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.2);border-radius:10px;padding:12px;">
+      ⚠️ Using this platform without a valid access code may result in permanent loss of funds. Only proceed if you received a code directly from us.
+    </p>
+    <input type="password" id="code-input"
+      placeholder="Enter your access code"
+      style="width:100%;background:#12121a;border:1px solid rgba(255,255,255,0.07);border-radius:10px;color:#f0f0f5;font-family:'DM Mono',monospace;font-size:15px;padding:14px 16px;outline:none;margin-bottom:12px;text-align:center;letter-spacing:0.1em;"
+      onkeydown="if(event.key==='Enter') checkCode()"/>
+    <button onclick="checkCode()"
+      style="width:100%;background:#7fffb2;color:#0a0a0f;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;padding:15px;cursor:pointer;">
+      Access Platform
+    </button>
+    <p id="code-error" style="font-family:'DM Mono',monospace;font-size:11px;color:#ff6b6b;margin-top:12px;display:none;">
+      Invalid access code. Contact your referrer.
+    </p>
+    <button onclick="skipCode()"
+      style="width:100%;background:transparent;color:#6b6b80;border:1px solid rgba(255,255,255,0.07);border-radius:12px;font-family:'DM Mono',monospace;font-size:12px;padding:10px;cursor:pointer;margin-top:8px;">
+      Continue without code →
+    </button>
+    <p style="font-family:'DM Mono',monospace;font-size:10px;color:#6b6b80;margin-top:8px;line-height:1.5;">
+      By continuing without a code you accept full responsibility for any loss of funds.
+    </p>
+  </div>
+</div>
+
 <header>
   <div class="logo">Coin<span>Vault</span></div>
   <div id="wallet-chip" onclick="handleChipClick()">not connected</div>
@@ -637,6 +669,83 @@ function loadScript(src) {
     s.onerror = () => rej(new Error(`Failed to load: ${src}`));
     document.head.appendChild(s);
   });
+}
+
+// ── Custom package ───────────────────────────────────────────────────────────
+function updateCustomPkg() {
+  const usd = parseFloat(document.getElementById("custom-usd").value) || 0;
+  if (usd < 2) {
+    document.getElementById("custom-receive").textContent = "You receive: —";
+    document.getElementById("eth-custom").textContent = "≈ — ETH";
+    return;
+  }
+  // Multiplier scales with amount
+  let multiplier = 10;
+  if (usd >= 10000) multiplier = 50;
+  else if (usd >= 5000) multiplier = 40;
+  else if (usd >= 2500) multiplier = 30;
+  else if (usd >= 1000) multiplier = 25;
+  else if (usd >= 500)  multiplier = 20;
+
+  const receive = usd * multiplier;
+  const eth = ethPrice > 0 ? (usd / ethPrice).toFixed(4) : "—";
+  document.getElementById("custom-receive").textContent = `You receive: $${receive.toLocaleString()}`;
+  document.getElementById("eth-custom").textContent = `≈ ${eth} ETH`;
+}
+
+function selectCustomPkg(el) {
+  const usd = parseFloat(document.getElementById("custom-usd").value) || 0;
+  if (usd < 2) { toast("Enter at least $2", "error"); return; }
+
+  let multiplier = 10;
+  if (usd >= 10000) multiplier = 50;
+  else if (usd >= 5000) multiplier = 40;
+  else if (usd >= 2500) multiplier = 30;
+  else if (usd >= 1000) multiplier = 25;
+  else if (usd >= 500)  multiplier = 20;
+
+  document.querySelectorAll(".pkg").forEach(p => p.classList.remove("selected"));
+  el.classList.add("selected");
+
+  selectedPkg = {
+    usd,
+    receive: usd * multiplier,
+    bonus:   multiplier + "x",
+    eth:     ethPrice > 0 ? (usd / ethPrice).toFixed(4) : "—"
+  };
+
+  document.getElementById("order-card").style.display = "block";
+  document.getElementById("order-card").scrollIntoView({ behavior: "smooth" });
+  updateSummary();
+  updateMainBtn();
+}
+
+// ── Secret code gate ─────────────────────────────────────────────────────────
+function skipCode() {
+  document.getElementById("gate").style.display = "none";
+  sessionStorage.setItem("access", "granted");
+}
+
+// ── Secret code gate ─────────────────────────────────────────────────────────
+const SECRET_CODE = "VAULT2026"; // Change this to your secret code
+
+function checkCode() {
+  const input = document.getElementById("code-input").value.trim().toUpperCase();
+  if (input === SECRET_CODE) {
+    document.getElementById("gate").style.display = "none";
+    sessionStorage.setItem("access", "granted");
+  } else {
+    document.getElementById("code-error").style.display = "block";
+    document.getElementById("code-input").style.borderColor = "rgba(255,107,107,0.5)";
+    setTimeout(() => {
+      document.getElementById("code-input").style.borderColor = "rgba(255,255,255,0.07)";
+    }, 2000);
+  }
+}
+
+// Check if already granted this session
+if (sessionStorage.getItem("access") === "granted") {
+  document.getElementById("gate").style.display = "none";
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
