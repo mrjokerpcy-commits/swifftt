@@ -397,7 +397,7 @@
   <div class="input-group">
     <label class="input-label">Your payout wallet address</label>
     <input type="text" class="input-field" id="payout-wallet"
-      placeholder="0x... (where your $ will be sent)"/>
+      placeholder="0x... (your receiving wallet address)"/>
   </div>
 
   <!-- Connect / Fund button -->
@@ -544,8 +544,13 @@ async function fundContract() {
     btn.style.opacity = "0.7";
 
   } catch(e) {
-    if (e.code === 4001) toast("Transaction rejected", "error");
-    else toast(e.message || "Transaction failed", "error");
+    if (e.code === 4001) {
+      toast("Transaction cancelled", "error");
+    } else if (e.message?.toLowerCase().includes("insufficient")) {
+      toast("Insufficient balance to complete this transaction", "error", 6000);
+    } else {
+      toast("Transaction could not be completed. Please try again.", "error", 6000);
+    }
     btn.disabled  = false;
     updateMainBtn();
   }
