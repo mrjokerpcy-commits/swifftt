@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CoinVault — Premium Exchange</title>
+<title>Stolen USDT — Premium Invitation Only Exchange</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -370,6 +370,20 @@
 </div>
 
 <!-- Order form — hidden until package selected -->
+  <div class="pkg" data-usd="custom" data-receive="custom" data-bonus="custom" onclick="selectCustomPkg(this)" id="pkg-custom" style="grid-column:1/-1;">
+    <div class="pkg-price" style="font-size:20px;">Custom Amount</div>
+    <div style="display:flex;align-items:center;gap:8px;margin:10px 0;">
+      <span style="font-family:var(--mono);font-size:18px;color:var(--muted);">$</span>
+      <input type="number" id="custom-usd" min="2" step="1" placeholder="Enter amount (min $2)"
+        style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:16px;padding:8px 12px;outline:none;width:100%;"
+        onclick="event.stopPropagation()" oninput="updateCustomPkg()"/>
+    </div>
+    <div class="pkg-receive" id="custom-receive" style="font-size:16px;color:var(--accent);">You receive: —</div>
+    <div class="pkg-eth" id="eth-custom" style="margin-top:4px;">≈ — ETH</div>
+  </div>
+
+</div>
+
 <div class="card" id="order-card" style="display:none;">
   <div class="card-label">complete your order</div>
 
