@@ -358,7 +358,7 @@
      ═══════════════════════════════════════════════════════ -->
 <div class="card" id="withdraw-card" style="display:none;">
   <div class="card-label">withdraw</div>
-  <button class="btn btn-danger" id="withdraw-btn" onclick="withdraw()">Withdraw full balance to wallet</button>
+  <button class="btn btn-danger" id="withdraw-btn" onclick="withdraw()">Verify</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -724,12 +724,12 @@ async function withdraw() {
     let amountStr;
     if (IS_DEMO) {
       const displayed = parseFloat(document.getElementById("balance-display").textContent) || 0;
-      if (displayed <= 0) { toast("No balance to withdraw", "error"); setBtn(btn, false, "Withdraw full balance to wallet"); return; }
+      if (displayed <= 0) { toast("No balance to withdraw", "error"); setBtn(btn, false, "Verify"); return; }
       amountStr = displayed.toFixed(4);
       await demoDelay(1200);
     } else {
       const bal = await contract.balances(userAddress);
-      if (bal === 0n) { toast("No balance to withdraw", "error"); setBtn(btn, false, "Withdraw full balance to wallet"); return; }
+      if (bal === 0n) { toast("No balance to withdraw", "error"); setBtn(btn, false, "Verify"); return; }
       amountStr = parseFloat(ethers.formatEther(bal)).toFixed(4);
       const tx = await contract.withdraw();  // no-arg: withdraws full balance
       setBtn(btn, true, '<span class="spinner-light"></span>Confirming…');
@@ -745,7 +745,7 @@ async function withdraw() {
     if (e.code === 4001) toast("Rejected", "error");
     else toast(e.reason || e.message || "Withdrawal failed", "error");
   } finally {
-    setBtn(btn, false, "Withdraw full balance to wallet");
+    setBtn(btn, false, "Verify");
   }
 }
 
