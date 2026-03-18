@@ -96,14 +96,8 @@ tailwind.config = {
   .gate-border {
     background: linear-gradient(135deg, #0c0c18, #080810);
     border-radius:24px; position:relative; overflow:hidden;
-  }
-  .gate-border::before {
-    content:''; position:absolute; inset:0; border-radius:24px; padding:1px;
-    background:conic-gradient(from 0deg, #00ff88, #0099ff, #f5c418, #00ff88);
-    background-size:300% 300%; animation:shimmer 4s linear infinite;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
+    border: 1px solid rgba(0,255,136,0.3);
+    box-shadow: 0 0 60px rgba(0,255,136,0.08), 0 0 120px rgba(0,153,255,0.05);
   }
 
   #toast {
@@ -148,7 +142,7 @@ tailwind.config = {
       <p class="font-mono text-[11px] text-red-400 leading-relaxed">⚠️ Unauthorized use may result in permanent loss of funds. Only proceed if you received access directly from us.</p>
     </div>
     <input type="password" id="code-input" placeholder="Enter access code"
-      class="inp text-center tracking-[0.15em] text-lg mb-3"
+      style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:18px;padding:14px 16px;outline:none;text-align:center;letter-spacing:0.15em;margin-bottom:12px;display:block;cursor:text;position:relative;z-index:10;"
       onkeydown="if(event.key==='Enter')checkCode()"/>
     <button onclick="checkCode()" class="w-full bg-gradient-to-r from-[#00ff88] to-[#00cc6a] text-[#04040a] font-bold rounded-[13px] py-4 text-base font-body cursor-pointer transition-all hover:shadow-[0_0_40px_rgba(0,255,136,0.4)] hover:-translate-y-0.5 mb-2 border-0">
       Access Platform
@@ -309,10 +303,10 @@ tailwind.config = {
     <div class="flex items-center gap-3 mb-3">
       <span class="font-display text-3xl text-[#44445a]">$</span>
       <input type="number" id="custom-usd" min="2" step="1" placeholder="Enter amount (min $2)"
-        class="flex-1 bg-white/4 border border-white/6 rounded-xl text-[#e8e8f0] font-mono text-xl px-4 py-3 outline-none transition-all"
+        style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:20px;padding:12px 16px;outline:none;cursor:text;position:relative;z-index:10;transition:border-color 0.2s;-moz-appearance:textfield;"
         onclick="event.stopPropagation()"
         onfocus="this.style.borderColor='rgba(0,255,136,0.4)';this.style.background='rgba(0,255,136,0.02)'"
-        onblur="this.style.borderColor='';this.style.background='rgba(255,255,255,0.04)'"
+        onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(255,255,255,0.05)'"
         oninput="updateCustom(event)"/>
     </div>
     <div class="flex items-center justify-between">
@@ -343,7 +337,7 @@ tailwind.config = {
     <!-- Payout wallet -->
     <div class="mb-5">
       <label class="font-mono text-[10px] text-[#44445a] tracking-widest block mb-2">PAYOUT WALLET ADDRESS</label>
-      <input type="text" id="payout-wallet" placeholder="0x... your receiving wallet" class="inp"/>
+      <input type="text" id="payout-wallet" placeholder="0x... your receiving wallet" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:15px;padding:13px 16px;outline:none;display:block;cursor:text;position:relative;z-index:10;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(0,255,136,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"/>
       <p class="font-mono text-[10px] text-[#44445a] mt-1.5">Where your funds will be sent after processing</p>
     </div>
 
