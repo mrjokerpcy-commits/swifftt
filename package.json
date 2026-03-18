@@ -1,0 +1,25 @@
+{
+  "name": "swiftpay",
+  "version": "1.0.0",
+  "description": "Gasless crypto checkout system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "deploy": "npx hardhat run scripts/deploy.js --network mainnet",
+    "authorize": "npx hardhat run scripts/authorize.js --network mainnet",
+    "compile": "npx hardhat compile"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.4",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.3.1",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.0"
+  }
+}
