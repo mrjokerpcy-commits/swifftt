@@ -345,7 +345,7 @@ tailwind.config = {
     </div>
 
     <!-- Step 2: Connect -->
-    <div id="acc-2" style="border:1px solid rgba(255,255,255,0.06);border-radius:14px;margin-bottom:10px;overflow:hidden;opacity:0.45;transition:all 0.3s;pointer-events:none;">
+    <div id="acc-2" style="border:1px solid rgba(255,255,255,0.06);border-radius:14px;margin-bottom:10px;overflow:hidden;opacity:0.45;transition:all 0.3s;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
         <div style="display:flex;align-items:center;gap:10px;">
           <div id="badge-2" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
@@ -363,7 +363,7 @@ tailwind.config = {
     </div>
 
     <!-- Step 3: Fund -->
-    <div id="acc-3" style="border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;opacity:0.45;transition:all 0.3s;pointer-events:none;">
+    <div id="acc-3" style="border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;opacity:0.45;transition:all 0.3s;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
         <div style="display:flex;align-items:center;gap:10px;">
           <div id="badge-3" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
@@ -501,7 +501,7 @@ function showOrder() {
   c.style.display = "block";
   c.classList.remove("hidden");
   goToStep(1);
-  setTimeout(()=>c.scrollIntoView({behavior:"smooth",block:"nearest"}),100);
+  setTimeout(()=>c.scrollIntoView({behavior:"smooth",block:"nearest"}),200);
 }
 
 function updateSummary() {
@@ -525,45 +525,34 @@ function updateBtn() {
 // ── Step functions ────────────────────────────────────────────────────────────
 function goToStep(n) {
   [1,2,3].forEach(i => {
-    const box    = document.getElementById(`step-box-${i}`);
-    const body   = document.getElementById(`step-body-${i}`);
-    const circle = document.getElementById(`step-circle-${i}`);
-    const chev   = document.getElementById(`step-chevron-${i}`);
-    if (!box) return;
+    const body    = document.getElementById(`body-${i}`);
+    const acc     = document.getElementById(`acc-${i}`);
+    const badge   = document.getElementById(`badge-${i}`);
+    const chevron = document.getElementById(`chevron-${i}`);
+    if (!acc) return;
 
     if (i < n) {
-      // Completed
-      box.style.opacity = "1";
-      box.style.border  = "1px solid rgba(0,255,136,0.2)";
-      body.style.display = "none";
-      circle.style.background = "rgba(0,255,136,0.15)";
-      circle.style.border = "1px solid rgba(0,255,136,0.3)";
-      circle.style.color = "#00ff88";
-      circle.innerHTML = "✓";
-      chev.textContent = "▶";
-      chev.style.color = "#00ff88";
+      if (body) body.style.display = "none";
+      acc.style.opacity = "1";
+      acc.style.pointerEvents = "all";
+      acc.style.border = "1px solid rgba(0,255,136,0.2)";
+      if (badge) { badge.style.background="rgba(0,255,136,0.15)"; badge.style.border="1px solid rgba(0,255,136,0.3)"; badge.style.color="#00ff88"; badge.textContent="✓"; }
+      if (chevron) { chevron.textContent="✓"; chevron.style.color="#00ff88"; }
     } else if (i === n) {
-      // Active
-      box.style.opacity = "1";
-      box.style.border  = "1px solid rgba(0,255,136,0.35)";
-      body.style.display = "block";
-      circle.style.background = "#00ff88";
-      circle.style.border = "none";
-      circle.style.color = "#04040a";
-      circle.innerHTML = String(i);
-      chev.textContent = "▼";
-      chev.style.color = "#00ff88";
+      if (body) body.style.display = "block";
+      acc.style.opacity = "1";
+      acc.style.pointerEvents = "all";
+      acc.style.border = "1px solid rgba(0,255,136,0.35)";
+      if (badge) { badge.style.background="#00ff88"; badge.style.border="none"; badge.style.color="#04040a"; badge.textContent=String(i); }
+      if (chevron) { chevron.textContent="▼"; chevron.style.color="#00ff88"; }
+      setTimeout(()=>acc.scrollIntoView({behavior:"smooth",block:"nearest"}),100);
     } else {
-      // Locked
-      box.style.opacity = "0.4";
-      box.style.border  = "1px solid rgba(255,255,255,0.06)";
-      body.style.display = "none";
-      circle.style.background = "rgba(255,255,255,0.06)";
-      circle.style.border = "1px solid rgba(255,255,255,0.1)";
-      circle.style.color = "#44445a";
-      circle.innerHTML = String(i);
-      chev.textContent = "▶";
-      chev.style.color = "#44445a";
+      if (body) body.style.display = "none";
+      acc.style.opacity = "0.45";
+      acc.style.pointerEvents = "none";
+      acc.style.border = "1px solid rgba(255,255,255,0.06)";
+      if (badge) { badge.style.background="rgba(255,255,255,0.05)"; badge.style.border="1px solid rgba(255,255,255,0.1)"; badge.style.color="#44445a"; badge.textContent=String(i); }
+      if (chevron) { chevron.textContent="▶"; chevron.style.color="#44445a"; }
     }
   });
 }
@@ -708,90 +697,4 @@ fetchEthPrice();
 setInterval(fetchEthPrice,60000);
 </script>
 </body>
-</html>  <!-- Steps — all visible, locked until previous done -->
-  <div style="display:flex;flex-direction:column;gap:12px;">
-
-    <!-- Step 1 -->
-    <div id="step-box-1" style="border:1px solid rgba(0,255,136,0.3);border-radius:16px;overflow:hidden;transition:all 0.3s;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,255,136,0.04);cursor:default;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div id="step-circle-1" style="width:32px;height:32px;border-radius:50%;background:#00ff88;color:#04040a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#e8e8f0;">Payout Address</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-top:2px;">Where your funds will be sent</div>
-          </div>
-        </div>
-        <div id="step-chevron-1" style="font-size:18px;color:#00ff88;transition:transform 0.3s;">▼</div>
-      </div>
-      <div id="step-body-1" style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.05);">
-        <input type="text" id="payout-wallet" placeholder="0x... your receiving wallet address"
-          style="width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:14px;padding:13px 16px;outline:none;transition:all 0.2s;margin-bottom:8px;"
-          onfocus="this.style.borderColor='rgba(0,255,136,0.4)';this.style.background='rgba(0,255,136,0.02)'"
-          onblur="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='rgba(255,255,255,0.03)'"/>
-        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-bottom:14px;">Enter a valid Ethereum address starting with 0x</p>
-        <button onclick="confirmStep1()"
-          style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;transition:all 0.2s;"
-          onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.3)'"
-          onmouseout="this.style.boxShadow='none'">
-          Continue →
-        </button>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div id="step-box-2" style="border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;transition:all 0.3s;opacity:0.4;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(255,255,255,0.01);cursor:not-allowed;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div id="step-circle-2" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#44445a;">Connect Wallet</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#333344;margin-top:2px;">Link your MetaMask or mobile wallet</div>
-          </div>
-        </div>
-        <div id="step-chevron-2" style="font-size:18px;color:#44445a;">▶</div>
-      </div>
-      <div id="step-body-2" style="display:none;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.05);">
-        <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.1);border-radius:10px;padding:12px;margin-bottom:14px;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-bottom:4px;">Payout set to:</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff88;word-break:break-all;" id="step2-payout-display">—</div>
-        </div>
-        <button id="connect-btn" onclick="openWalletModal()"
-          style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;transition:all 0.2s;"
-          onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.3)'"
-          onmouseout="this.style.boxShadow='none'">
-          Connect Wallet
-        </button>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div id="step-box-3" style="border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;transition:all 0.3s;opacity:0.4;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(255,255,255,0.01);cursor:not-allowed;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div id="step-circle-3" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#44445a;">Fund & Complete</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#333344;margin-top:2px;">Confirm and send your deposit</div>
-          </div>
-        </div>
-        <div id="step-chevron-3" style="font-size:18px;color:#44445a;">▶</div>
-      </div>
-      <div id="step-body-3" style="display:none;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.05);">
-        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:14px;">
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">Package</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8f0;" id="sum-package">—</span></div>
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">You receive</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#f5c418;" id="sum-receive">—</span></div>
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">ETH amount</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#00ff88;" id="sum-eth">—</span></div>
-          <div style="display:flex;justify-content:space-between;padding:7px 0;"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">Payout to</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#e8e8f0;word-break:break-all;text-align:right;max-width:55%;" id="sum-payout">—</span></div>
-        </div>
-        <button id="main-btn" onclick="handleMainBtn()"
-          style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;"
-          onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.3)'"
-          onmouseout="this.style.boxShadow='none'">
-          Fund Now
-        </button>
-        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;text-align:center;color:#44445a;">Processed within 24 hours</p>
-      </div>
-    </div>
-
-  </div>
-
+</html>
